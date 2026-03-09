@@ -1,0 +1,12 @@
+
+- fullscreen
+- xdg-open pdf
+  - then exit
+- cache thumbnails
+- lazy image rendering (no render offscreen)
+- dynamic resize of thumbnails (fake zoom)
+- dynamic resize grid based on window size
+- interactive filter by
+  - filename
+  - pdftitle
+- iterate over sudirs (OPTIONAL)
