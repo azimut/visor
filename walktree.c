@@ -1,13 +1,17 @@
+#define _GNU_SOURCE 1
+#define _XOPEN_SOURCE 500
+
 #include "walktree.h"
 
 #include <ftw.h>
 #include <libgen.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define INIT_SIZE_PDFS 10
-#define INIT_SIZE_FILENAME 100
 
 Pdfs pdfs = {0};
 
@@ -36,8 +40,9 @@ static void pdfs_add(const char *filepath, long filesize, long mtime) {
     pdfs.pdfs = reallocarray(pdfs.pdfs, sizeof(Pdf), new_capacity);
     pdfs.capacity = new_capacity;
   }
-  pdfs.pdfs[pdfs.count].filepath = malloc(sizeof(char) * INIT_SIZE_FILENAME);
-  strcpy(pdfs.pdfs[pdfs.count].filepath, filepath);
+  pdfs.pdfs[pdfs.count].filepath = malloc(sizeof(char) * PATH_MAX);
+  pdfs.pdfs[pdfs.count].filepath =
+      realpath(filepath, pdfs.pdfs[pdfs.count].filepath);
   pdfs.pdfs[pdfs.count].filesize = filesize;
   pdfs.pdfs[pdfs.count].mtime = mtime;
   pdfs.count++;
@@ -50,7 +55,8 @@ static char *file_extension(const char *filepath) {
   return extension == filename ? NULL : extension;
 }
 
-static int callback(const char *filepath, const struct stat *sb, int tflag) {
+static int callback(const char *filepath, const struct stat *sb, int tflag,
+                    struct FTW *ftwbuf) {
   const bool is_directory = tflag == FTW_D;
   const char *extension = file_extension(filepath);
 
@@ -60,12 +66,15 @@ static int callback(const char *filepath, const struct stat *sb, int tflag) {
   if (is_directory || !extension || strcmp(extension, ".pdf")) {
     return 0;
   }
-  pdfs_add(filepath, sb->st_size, sb->st_mtim.tv_sec);
+  if (ftwbuf->level > 1) {
+    return 0;
+  }
+  pdfs_add(filepath, sb->st_size, sb->st_mtime);
   return 0;
 }
 
 Pdfs pdfs_find(void) {
   pdfs_init();
-  ftw(".", callback, 10);
+  nftw(".", callback, 10, FTW_DEPTH);
   return pdfs;
 }
