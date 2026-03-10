@@ -5,7 +5,7 @@ LDFLAGS := $(shell pkg-config --libs   $(PKGS))
 CFLAGS  += $(shell sdl2-config --cflags)
 LDFLAGS += $(shell sdl2-config --libs)
 
-SRCS := main.c walktree.c cache.c thumbnail.c window.c list.c
+SRCS := $(wildcard src/*.c)
 
 main: $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
