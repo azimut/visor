@@ -1,5 +1,5 @@
 #include "cache.h"
-#include "list.h"
+#include "filepaths.h"
 #include "thumbnail.h"
 #include "walktree.h"
 #include "window.h"
@@ -14,27 +14,24 @@ int main(void) {
   if (window_init()) {
     return 1;
   }
-  List *thumbnails = NULL;
-  Pdfs pdfs = pdfs_find();
+  Filepaths thumbnails = filepaths_new();
+  Filepaths pdfs = pdfs_find();
   for (size_t i = 0; i < pdfs.count; ++i) {
-    puts(pdfs.pdfs[i].filepath);
-    cache_mkdir_p(pdfs.pdfs[i].filepath);
-    puts(cache_image_filepath(pdfs.pdfs[i].filepath, ".png"));
-    char *thumbnail_path = cache_image_filepath(pdfs.pdfs[i].filepath, ".png");
+    puts(pdfs.paths[i]);
+    cache_mkdir_p(pdfs.paths[i]);
+    puts(cache_image_filepath(pdfs.paths[i], ".png"));
+    char *thumbnail_path = cache_image_filepath(pdfs.paths[i], ".png");
 
-    if (!thumbnails)
-      thumbnails = list_new(thumbnail_path);
-    else
-      list_add(thumbnails, thumbnail_path);
+    filepaths_add(&thumbnails, thumbnail_path);
 
     if (access(thumbnail_path, F_OK)) {
-      thumbnail_create(pdfs.pdfs[i].filepath, thumbnail_path, 0);
+      thumbnail_create(pdfs.paths[i], thumbnail_path, 0);
     }
     free(thumbnail_path);
   }
-  window_draw(*thumbnails);
-  pdfs_free();
+  window_draw(thumbnails);
   thumbnail_free();
   window_free();
+  filepaths_free(&pdfs);
   return 0;
 }
