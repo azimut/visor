@@ -109,7 +109,6 @@ void window_draw(const Filepaths filepaths) {
     }
     SDL_RenderPresent(renderer);
   }
-
   textures_free(&textures);
   return;
 }

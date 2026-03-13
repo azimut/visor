@@ -11,9 +11,6 @@ int main(void) {
   if (thumbnail_init()) {
     return 1;
   }
-  if (window_init()) {
-    return 1;
-  }
   Filepaths thumbnails = filepaths_new();
   Filepaths pdfs = pdfs_find();
   for (size_t i = 0; i < pdfs.count; ++i) {
@@ -29,6 +26,9 @@ int main(void) {
       thumbnail_create(pdfs.paths[i], thumbnail_path, 0);
     }
     free(thumbnail_path);
+  }
+  if (window_init()) {
+    return 1;
   }
   window_draw(thumbnails);
   thumbnail_free();
