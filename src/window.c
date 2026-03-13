@@ -88,6 +88,17 @@ void window_draw(const Filepaths filepaths) {
     if (e.type == SDL_QUIT) {
       quit = true;
     }
+    if (e.type == SDL_KEYUP) {
+      switch (e.key.keysym.sym) {
+      case SDLK_ESCAPE:
+      case SDLK_q: {
+        quit = true;
+        break;
+      }
+      default:
+        break;
+      }
+    }
     SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
