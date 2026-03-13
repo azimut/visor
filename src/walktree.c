@@ -35,7 +35,9 @@ static int callback(const char *filepath,
   if (ftwbuf->level > 1) {
     return 0;
   }
-  filepaths_add(&pdfs, filepath);
+  char *buf = realpath(filepath, NULL);
+  filepaths_add(&pdfs, buf);
+  free(buf);
   return 0;
 }
 

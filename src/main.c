@@ -17,6 +17,7 @@ int main(void) {
   Filepaths thumbnails = filepaths_new();
   Filepaths pdfs = pdfs_find();
   for (size_t i = 0; i < pdfs.count; ++i) {
+    puts("-----");
     puts(pdfs.paths[i]);
     cache_mkdir_p(pdfs.paths[i]);
     puts(cache_image_filepath(pdfs.paths[i], ".png"));
