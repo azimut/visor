@@ -20,8 +20,8 @@ int main(void) {
     puts("-----");
     puts(pdfs.paths[i]);
     cache_mkdir_p(pdfs.paths[i]);
-    puts(cache_image_filepath(pdfs.paths[i], ".png"));
-    char *thumbnail_path = cache_image_filepath(pdfs.paths[i], ".png");
+    puts(cache_image_filepath(pdfs.paths[i], ".jpg"));
+    char *thumbnail_path = cache_image_filepath(pdfs.paths[i], ".jpg");
 
     filepaths_add(&thumbnails, thumbnail_path);
 

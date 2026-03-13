@@ -88,7 +88,7 @@ void window_draw(const Filepaths filepaths) {
     if (e.type == SDL_QUIT) {
       quit = true;
     }
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
     for (size_t i = 0; i < textures.count; ++i) {

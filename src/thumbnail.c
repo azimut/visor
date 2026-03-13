@@ -48,8 +48,10 @@ int thumbnail_create(const char *input_pdf, const char *output_image,
     return 1;
   }
 
+  MagickSetImageAlphaChannel(magick_wand, RemoveAlphaChannel);
+
   // 5. Set the output image format
-  MagickSetImageFormat(magick_wand, "png");
+  MagickSetImageFormat(magick_wand, "jpg");
 
   // 6. Set image compression quality (optional, for formats like JPEG)
   MagickSetImageCompressionQuality(magick_wand, 90);
