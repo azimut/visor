@@ -7,8 +7,8 @@
 #define TITLE "pdfeye"
 #define WIDTH 320
 #define HEIGHT 240
-#define COLS 3
-#define ROWS 3
+#define COLS 2
+#define ROWS 2
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
 
@@ -51,9 +51,11 @@ void textures_free(Textures *textures) {
   textures->count = 0;
 }
 
-static SDL_Rect thumbnail_size(unsigned int xcoord, unsigned int ycoord) {
-  const int w = WIDTH / (COLS + 1);
-  const int h = HEIGHT / (ROWS + 1);
+static SDL_Rect thumbnail_size(size_t idx) {
+  const int w = WIDTH / COLS;
+  const int h = HEIGHT / ROWS;
+  const double xcoord = SDL_fmod(idx, COLS);
+  const double ycoord = SDL_floor(idx / COLS);
   const int x = xcoord * w;
   const int y = ycoord * h;
   return (SDL_Rect){.x = x, .y = y, .w = w, .h = h};
@@ -86,11 +88,11 @@ void window_draw(const Filepaths filepaths) {
     if (e.type == SDL_QUIT) {
       quit = true;
     }
-    SDL_SetRenderDrawColor(renderer, 0x0F, 0x0F, 0x0F, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
     for (size_t i = 0; i < textures.count; ++i) {
-      SDL_Rect rect = thumbnail_size(0, i);
+      SDL_Rect rect = thumbnail_size(i);
       SDL_Texture *texture = textures.texture[i];
       SDL_RenderCopy(renderer, texture, NULL, &rect);
     }
