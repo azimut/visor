@@ -30,9 +30,14 @@ int main(void) {
   if (window_init()) {
     return 1;
   }
-  window_draw(thumbnails);
+  int selected_idx = window_draw(thumbnails);
   thumbnail_free();
   window_free();
+  if (selected_idx >= 0) {
+    printf("Opening %s\n", pdfs.paths[selected_idx]);
+    char *args[] = {"xdg-open", pdfs.paths[selected_idx], NULL};
+    execvp("xdg-open", args);
+  }
   filepaths_free(&pdfs);
   return 0;
 }

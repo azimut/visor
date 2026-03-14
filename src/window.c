@@ -89,14 +89,16 @@ static void window_draw_control(const Control control) {
   const int xtr = xtl + w, ytr = ytl;
   const int xbr = xtr, ybr = ytr + h;
   const int xbl = xtl, ybl = ybr;
-  const int r = 255, b = 0, g = 100;
+  const int r = 200, b = 20, g = 100;
   thickLineRGBA(renderer, xtl, ytl, xtr, ytr, BORDER_THICKNESS, r, g, b, 255);
   thickLineRGBA(renderer, xtr, ytr, xbr, ybr, BORDER_THICKNESS, r, g, b, 255);
   thickLineRGBA(renderer, xbr, ybr, xbl, ybl, BORDER_THICKNESS, r, g, b, 255);
   thickLineRGBA(renderer, xbl, ybl, xtl, ytl, BORDER_THICKNESS, r, g, b, 255);
 }
 
-void window_draw(const Filepaths filepaths) {
+// Returns the selected index, or -1
+int window_draw(const Filepaths filepaths) {
+  int selected_idx = -1;
   Control control = control_new(COLS, ROWS);
   Textures textures = textures_from_filepaths(filepaths);
   bool quit = false;
@@ -129,6 +131,13 @@ void window_draw(const Filepaths filepaths) {
         control_update(&control, CONTROL_MOVE_RIGHT);
         break;
       }
+      case SDLK_RETURN: {
+        if (control.idx > filepaths.count - 1)
+          break;
+        selected_idx = control.idx;
+        quit = true;
+        break;
+      }
       default:
         break;
       }
@@ -145,7 +154,7 @@ void window_draw(const Filepaths filepaths) {
     SDL_RenderPresent(renderer);
   }
   textures_free(&textures);
-  return;
+  return selected_idx;
 }
 
 void window_free(void) {

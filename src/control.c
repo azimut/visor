@@ -26,4 +26,5 @@ void control_update(Control *control, const Control_Move movement) {
     break;
   }
   }
+  control->idx = control->ypos * control->rows + control->xpos;
 }
