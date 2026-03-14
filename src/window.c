@@ -1,6 +1,7 @@
 #include "window.h"
 #include "SDL.h"
 #include "SDL_image.h"
+#include "control.h"
 
 #include <stdbool.h>
 
@@ -80,6 +81,7 @@ int window_init(void) {
 }
 
 void window_draw(const Filepaths filepaths) {
+  Control control = control_new(COLS, ROWS);
   Textures textures = textures_from_filepaths(filepaths);
   bool quit = false;
   while (!quit) {
@@ -93,6 +95,22 @@ void window_draw(const Filepaths filepaths) {
       case SDLK_ESCAPE:
       case SDLK_q: {
         quit = true;
+        break;
+      }
+      case SDLK_h: {
+        control_update(&control, CONTROL_MOVE_LEFT);
+        break;
+      }
+      case SDLK_j: {
+        control_update(&control, CONTROL_MOVE_DOWN);
+        break;
+      }
+      case SDLK_k: {
+        control_update(&control, CONTROL_MOVE_UP);
+        break;
+      }
+      case SDLK_l: {
+        control_update(&control, CONTROL_MOVE_RIGHT);
         break;
       }
       default:
