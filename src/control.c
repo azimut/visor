@@ -27,5 +27,3 @@ void control_update(Control *control, const Control_Move movement) {
   }
   }
 }
-
-void control_update_rect(const Control control, SDL_Rect *rect) {}

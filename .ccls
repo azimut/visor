@@ -18,5 +18,6 @@ gcc
 -D_REENTRANT
 -lMagickWand-6.Q16
 -lMagickCore-6.Q16
+-lSDL2_gfx
 -lSDL2_image
 -lSDL2

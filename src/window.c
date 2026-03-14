@@ -1,5 +1,6 @@
 #include "window.h"
 #include "SDL.h"
+#include "SDL2_gfxPrimitives.h"
 #include "SDL_image.h"
 #include "control.h"
 
@@ -12,6 +13,7 @@
 #define ROWS 2
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
+#define BORDER_THICKNESS 10
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
@@ -52,16 +54,6 @@ void textures_free(Textures *textures) {
   textures->count = 0;
 }
 
-static SDL_Rect thumbnail_size(size_t idx) {
-  const int w = WIDTH / COLS;
-  const int h = HEIGHT / ROWS;
-  const double xcoord = SDL_fmod(idx, COLS);
-  const double ycoord = SDL_floor(idx / COLS);
-  const int x = xcoord * w;
-  const int y = ycoord * h;
-  return (SDL_Rect){.x = x, .y = y, .w = w, .h = h};
-}
-
 int window_init(void) {
   if (SDL_Init(SDL_INIT_VIDEO)) {
     SDL_LogError(SDL_LOG_PRIORITY_ERROR, "Starting SDL...");
@@ -80,6 +72,30 @@ int window_init(void) {
   return 0;
 }
 
+static SDL_Rect thumbnail_size(size_t idx) {
+  const int w = WIDTH / COLS;
+  const int h = HEIGHT / ROWS;
+  const double xcoord = SDL_fmod(idx, COLS);
+  const double ycoord = SDL_floor(idx / COLS);
+  const int x = xcoord * w;
+  const int y = ycoord * h;
+  return (SDL_Rect){.x = x, .y = y, .w = w, .h = h};
+}
+
+static void window_draw_control(const Control control) {
+  const int w = WIDTH / COLS;
+  const int h = HEIGHT / ROWS;
+  const int xtl = control.xpos * w, ytl = control.ypos * h;
+  const int xtr = xtl + w, ytr = ytl;
+  const int xbr = xtr, ybr = ytr + h;
+  const int xbl = xtl, ybl = ybr;
+  const int r = 255, b = 0, g = 100;
+  thickLineRGBA(renderer, xtl, ytl, xtr, ytr, BORDER_THICKNESS, r, g, b, 255);
+  thickLineRGBA(renderer, xtr, ytr, xbr, ybr, BORDER_THICKNESS, r, g, b, 255);
+  thickLineRGBA(renderer, xbr, ybr, xbl, ybl, BORDER_THICKNESS, r, g, b, 255);
+  thickLineRGBA(renderer, xbl, ybl, xtl, ytl, BORDER_THICKNESS, r, g, b, 255);
+}
+
 void window_draw(const Filepaths filepaths) {
   Control control = control_new(COLS, ROWS);
   Textures textures = textures_from_filepaths(filepaths);
@@ -90,7 +106,7 @@ void window_draw(const Filepaths filepaths) {
     if (e.type == SDL_QUIT) {
       quit = true;
     }
-    if (e.type == SDL_KEYUP) {
+    if (e.type == SDL_KEYDOWN) {
       switch (e.key.keysym.sym) {
       case SDLK_ESCAPE:
       case SDLK_q: {
@@ -125,6 +141,7 @@ void window_draw(const Filepaths filepaths) {
       SDL_Texture *texture = textures.texture[i];
       SDL_RenderCopy(renderer, texture, NULL, &rect);
     }
+    window_draw_control(control);
     SDL_RenderPresent(renderer);
   }
   textures_free(&textures);

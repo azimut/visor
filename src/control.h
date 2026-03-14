@@ -17,6 +17,5 @@ typedef enum {
 
 Control control_new(const int cols, const int rows);
 void control_update(Control *, const Control_Move);
-void control_update_rect(const Control, SDL_Rect *);
 
 #endif /* CONTROL_H */

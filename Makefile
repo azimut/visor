@@ -1,4 +1,4 @@
-PKGS    := MagickWand SDL2_image
+PKGS    := MagickWand SDL2_image SDL2_gfx
 CFLAGS  := -Wall -Wextra -pedantic -O0 -ggdb
 CFLAGS  += $(shell pkg-config --cflags $(PKGS))
 LDFLAGS := $(shell pkg-config --libs   $(PKGS))
@@ -9,3 +9,6 @@ SRCS := $(wildcard src/*.c)
 
 main: $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
+
+.PHONY: install
+install:; sudo apt install libsdl2-gfx-dev libsdl2-image-dev libmagickwand-dev
