@@ -7,10 +7,10 @@
 #include <stdbool.h>
 
 #define TITLE "pdfeye"
-#define WIDTH 320
-#define HEIGHT 240
-#define COLS 2
-#define ROWS 2
+#define WIDTH 640
+#define HEIGHT 480
+#define COLS 5
+#define ROWS 5
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
 #define BORDER_THICKNESS 10
