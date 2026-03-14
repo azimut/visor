@@ -11,4 +11,8 @@ main: $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
 
 .PHONY: install
-install:; sudo apt install libsdl2-gfx-dev libsdl2-image-dev libmagickwand-dev
+install: main
+	cp main $(HOME)/bin/pdfeye
+
+.PHONY: deps
+deps:; sudo apt install libsdl2-gfx-dev libsdl2-image-dev libmagickwand-dev
