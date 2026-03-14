@@ -1,13 +1,14 @@
 # pdfeye
 
-A keyboard centric file explorer, only for pdfs. Not an actual pdf reader, just a explorer and launcher for your pdf viewer.
+A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reader, just a file explorer and launcher for your pdf viewer.
 
-## Features
+## Planned Features
 
-- [ ] xdg-open pdf
-  - then exit
+- [x] cache thumbnails
+- [x] xdg-open pdf
+  - [ ] then exit
+- [ ] Grid size based on number of files
 - [ ] fullscreen
-- [ ] cache thumbnails
 - [ ] lazy image rendering (no render offscreen)
 - [ ] dynamic resize of thumbnails (fake zoom)
 - [ ] dynamic resize grid based on window size

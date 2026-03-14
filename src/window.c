@@ -72,7 +72,7 @@ int window_init(void) {
   return 0;
 }
 
-static SDL_Rect thumbnail_size(size_t idx) {
+static SDL_Rect thumbnail_rect(size_t idx) {
   const int w = WIDTH / COLS;
   const int h = HEIGHT / ROWS;
   const double xcoord = SDL_fmod(idx, COLS);
@@ -146,7 +146,7 @@ int window_draw(const Filepaths filepaths) {
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
     for (size_t i = 0; i < textures.count; ++i) {
-      SDL_Rect rect = thumbnail_size(i);
+      SDL_Rect rect = thumbnail_rect(i);
       SDL_Texture *texture = textures.texture[i];
       SDL_RenderCopy(renderer, texture, NULL, &rect);
     }
