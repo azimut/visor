@@ -38,6 +38,7 @@ int thumbnail_create(const char *input_pdf, const char *output_image,
   // argument generally works for single page reads.
   char filename_with_page[256];
   sprintf(filename_with_page, "%s[%d]", input_pdf, page_number);
+  MagickSetOption(magick_wand, "pdf:use-cropbox", "true");
   status = MagickReadImage(magick_wand, filename_with_page);
 
   if (status == MagickFalse) {
