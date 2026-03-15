@@ -11,7 +11,7 @@
 #define HEIGHT 480
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
-#define BORDER_THICKNESS 10
+#define BORDER_THICKNESS 5
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
@@ -92,7 +92,7 @@ static void window_draw_control(const Control control, const Screen screen) {
   const int xtr = xtl + w, ytr = ytl;
   const int xbr = xtr, ybr = ytr + h;
   const int xbl = xtl, ybl = ybr;
-  const int r = 200, b = 20, g = 100;
+  const int r = 40, g = 255, b = 0;
   thickLineRGBA(renderer, xtl, ytl, xtr, ytr, BORDER_THICKNESS, r, g, b, 255);
   thickLineRGBA(renderer, xtr, ytr, xbr, ybr, BORDER_THICKNESS, r, g, b, 255);
   thickLineRGBA(renderer, xbr, ybr, xbl, ybl, BORDER_THICKNESS, r, g, b, 255);
@@ -152,9 +152,9 @@ int window_draw(const Filepaths filepaths) {
         break;
       }
     }
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
     for (size_t i = 0; i < textures.count; ++i) {
       SDL_Rect rect = thumbnail_rect(i, screen);
       SDL_Texture *texture = textures.texture[i];
