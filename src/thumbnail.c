@@ -28,7 +28,7 @@ void thumbnail_free(void) {
 int thumbnail_create(const char *input_pdf, const char *output_image,
                      unsigned int page_number) {
 
-  printf("[INFO] Converting page %d of %s\n", page_number, input_pdf);
+  printf("[INFO] Converting page %d of %s ... ", page_number, input_pdf);
   MagickBooleanType status;
 
   // 4. Read the specific page from the PDF file.
@@ -70,8 +70,7 @@ int thumbnail_create(const char *input_pdf, const char *output_image,
   if (status == MagickFalse) {
     fprintf(stderr, "[ERROR] Failed to write image to file %s\n", output_image);
   } else {
-    printf("[INFO] Successfully converted page %d to %s\n", page_number,
-           output_image);
+    puts("DONE!");
   }
 
   return 0;

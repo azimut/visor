@@ -12,6 +12,7 @@
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
 #define BORDER_THICKNESS 5
+#define THUMB_ASPECT 1.1
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
@@ -19,6 +20,7 @@ SDL_Renderer *renderer = NULL;
 typedef struct Screen {
   int width, height;
   int cols, rows;
+  int cellwidth, cellheight;
 } Screen;
 
 typedef struct Textures {
@@ -75,14 +77,41 @@ int window_init(void) {
   return 0;
 }
 
-static SDL_Rect thumbnail_rect(const size_t idx, const Screen screen) {
-  const int w = screen.width / screen.cols;
-  const int h = screen.height / screen.rows;
+static SDL_Point texture_size(SDL_Texture *texture) {
+  SDL_Point size;
+  SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
+  return size;
+}
+
+static SDL_Point thumbnail_size(SDL_Texture *texture, const Screen screen) {
+  SDL_Point result;
+  const SDL_Point texsize = texture_size(texture);
+  if (texsize.x > texsize.y) {
+    const double width = (double)screen.cellwidth / THUMB_ASPECT;
+    const double aspect = ((double)texsize.y / texsize.x);
+    result.x = width;
+    result.y = width * aspect;
+
+  } else {
+    const double height = (double)screen.cellheight / THUMB_ASPECT;
+    const double aspect = ((double)texsize.x / texsize.y);
+    result.x = height * aspect;
+    result.y = height;
+  }
+  return result;
+}
+
+static SDL_Rect thumbnail_rect(const size_t idx, const Screen screen,
+                               SDL_Texture *texture) {
+  const SDL_Point thumbsize = thumbnail_size(texture, screen);
   const double xcoord = SDL_fmod(idx, screen.cols);
   const double ycoord = SDL_floor((double)idx / screen.cols);
-  const int x = xcoord * w;
-  const int y = ycoord * h;
-  return (SDL_Rect){.x = x, .y = y, .w = w, .h = h};
+  const int xorig = xcoord * screen.cellwidth;
+  const int yorig = ycoord * screen.cellheight;
+  return (SDL_Rect){.x = xorig + ((screen.cellwidth - thumbsize.x) / 2),
+                    .y = yorig + ((screen.cellheight - thumbsize.y) / 2),
+                    .w = thumbsize.x,
+                    .h = thumbsize.y};
 }
 
 static void window_draw_control(const Control control, const Screen screen) {
@@ -102,10 +131,14 @@ static void window_draw_control(const Control control, const Screen screen) {
 // Returns the selected index, or -1
 int window_draw(const Filepaths filepaths) {
   int selected_idx = -1;
-  Screen screen = (Screen){.width = WIDTH,
-                           .height = HEIGHT,
-                           .cols = SDL_ceil(SDL_sqrt(filepaths.count)),
-                           .rows = SDL_ceil(SDL_sqrt(filepaths.count))};
+  const int nrows = SDL_ceil(SDL_sqrt(filepaths.count));
+  const int ncols = SDL_ceil(SDL_sqrt(filepaths.count));
+  const Screen screen = (Screen){.width = WIDTH,
+                                 .height = HEIGHT,
+                                 .cols = ncols,
+                                 .rows = nrows,
+                                 .cellwidth = WIDTH / ncols,
+                                 .cellheight = HEIGHT / nrows};
   Control control = control_new(screen.cols, screen.rows);
   Textures textures = textures_from_filepaths(filepaths);
   SDL_Log("screen.cols = %d   screen.rows = %d", screen.cols, screen.rows);
@@ -152,12 +185,12 @@ int window_draw(const Filepaths filepaths) {
         break;
       }
     }
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0x0A, 0x0A, 0x0A, 0xFF);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
-    for (size_t i = 0; i < textures.count; ++i) {
-      SDL_Rect rect = thumbnail_rect(i, screen);
-      SDL_Texture *texture = textures.texture[i];
+    for (size_t idx = 0; idx < textures.count; ++idx) {
+      SDL_Texture *texture = textures.texture[idx];
+      SDL_Rect rect = thumbnail_rect(idx, screen, texture);
       SDL_RenderCopy(renderer, texture, NULL, &rect);
     }
     window_draw_control(control, screen);
