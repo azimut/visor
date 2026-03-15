@@ -9,14 +9,17 @@
 #define TITLE "pdfeye"
 #define WIDTH 640
 #define HEIGHT 480
-#define COLS 5
-#define ROWS 5
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
 #define BORDER_THICKNESS 10
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
+
+typedef struct Screen {
+  int width, height;
+  int cols, rows;
+} Screen;
 
 typedef struct Textures {
   SDL_Texture **texture;
@@ -72,19 +75,19 @@ int window_init(void) {
   return 0;
 }
 
-static SDL_Rect thumbnail_rect(size_t idx) {
-  const int w = WIDTH / COLS;
-  const int h = HEIGHT / ROWS;
-  const double xcoord = SDL_fmod(idx, COLS);
-  const double ycoord = SDL_floor(idx / COLS);
+static SDL_Rect thumbnail_rect(const size_t idx, const Screen screen) {
+  const int w = screen.width / screen.cols;
+  const int h = screen.height / screen.rows;
+  const double xcoord = SDL_fmod(idx, screen.cols);
+  const double ycoord = SDL_floor((double)idx / screen.cols);
   const int x = xcoord * w;
   const int y = ycoord * h;
   return (SDL_Rect){.x = x, .y = y, .w = w, .h = h};
 }
 
-static void window_draw_control(const Control control) {
-  const int w = WIDTH / COLS;
-  const int h = HEIGHT / ROWS;
+static void window_draw_control(const Control control, const Screen screen) {
+  const int w = screen.width / screen.cols;
+  const int h = screen.height / screen.rows;
   const int xtl = control.xpos * w, ytl = control.ypos * h;
   const int xtr = xtl + w, ytr = ytl;
   const int xbr = xtr, ybr = ytr + h;
@@ -99,8 +102,15 @@ static void window_draw_control(const Control control) {
 // Returns the selected index, or -1
 int window_draw(const Filepaths filepaths) {
   int selected_idx = -1;
-  Control control = control_new(COLS, ROWS);
+  Screen screen = (Screen){.width = WIDTH,
+                           .height = HEIGHT,
+                           .cols = SDL_ceil(SDL_sqrt(filepaths.count)),
+                           .rows = SDL_ceil(SDL_sqrt(filepaths.count))};
+  Control control = control_new(screen.cols, screen.rows);
   Textures textures = textures_from_filepaths(filepaths);
+  SDL_Log("screen.cols = %d   screen.rows = %d", screen.cols, screen.rows);
+  SDL_Log("filepaths.count = %ld", filepaths.count);
+  SDL_Log("textures.count = %ld", textures.count);
   bool quit = false;
   while (!quit) {
     SDL_Event e;
@@ -146,11 +156,11 @@ int window_draw(const Filepaths filepaths) {
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
     for (size_t i = 0; i < textures.count; ++i) {
-      SDL_Rect rect = thumbnail_rect(i);
+      SDL_Rect rect = thumbnail_rect(i, screen);
       SDL_Texture *texture = textures.texture[i];
       SDL_RenderCopy(renderer, texture, NULL, &rect);
     }
-    window_draw_control(control);
+    window_draw_control(control, screen);
     SDL_RenderPresent(renderer);
   }
   textures_free(&textures);

@@ -7,7 +7,8 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 - [x] cache thumbnails
 - [x] xdg-open pdf
   - [ ] then exit
-- [ ] Grid size based on number of files
+- [x] Grid size based on number of files
+- [ ] sort by filename & depth
 - [ ] fullscreen
 - [ ] lazy image rendering (no render offscreen)
 - [ ] dynamic resize of thumbnails (fake zoom)
