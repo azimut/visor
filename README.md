@@ -1,4 +1,4 @@
-# pdfeye
+# visor
 
 A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reader, just a file explorer and launcher for your pdf viewer.
 

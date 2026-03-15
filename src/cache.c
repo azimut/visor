@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#define CACHE_ROOT "/.cache/pdfeye"
+#define CACHE_ROOT "/.cache/visor"
 
 static void cache_mkdir(const char *dirpath) {
   const char *homedir = getenv("HOME");

@@ -6,7 +6,7 @@
 
 #include <stdbool.h>
 
-#define TITLE "pdfeye"
+#define TITLE "visor"
 #define WIDTH 640
 #define HEIGHT 480
 #define POS SDL_WINDOWPOS_UNDEFINED

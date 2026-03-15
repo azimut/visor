@@ -12,7 +12,7 @@ main: $(SRCS)
 
 .PHONY: install
 install: main
-	cp main $(HOME)/bin/pdfeye
+	cp main $(HOME)/bin/visor
 
 .PHONY: deps
 deps:; sudo apt install libsdl2-gfx-dev libsdl2-image-dev libmagickwand-dev
