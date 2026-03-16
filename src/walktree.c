@@ -50,7 +50,7 @@ static int callback(const char *filepath,
   return 0;
 }
 
-Filepaths pdfs_find(void) {
+Filepaths find_documents(void) {
   pdfs = filepaths_new();
   nftw(".", callback, 10, FTW_DEPTH);
   return pdfs;

@@ -1,7 +1,7 @@
 #include "filepaths.h"
+#include <string.h>
 
 #define INIT_CAPACITY 10
-#include "string.h"
 
 Filepaths filepaths_new(void) {
   return ((Filepaths){.capacity = INIT_CAPACITY,

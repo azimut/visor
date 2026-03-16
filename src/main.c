@@ -9,9 +9,9 @@
 
 int main(void) {
 
-  Filepaths pdfs = pdfs_find();
-  if (pdfs.count == 0) {
-    fprintf(stderr, "No .pdf files found in directory :/\n");
+  Filepaths documents = find_documents();
+  if (documents.count == 0) {
+    fprintf(stderr, "No documents found in directory :/\n");
     return 1;
   }
 
@@ -21,12 +21,13 @@ int main(void) {
   }
 
   Filepaths thumbnails = filepaths_new();
-  for (size_t i = 0; i < pdfs.count; ++i) {
-    cache_mkdir_p(pdfs.paths[i]);
-    char *thumbnail_path = cache_image_filepath(pdfs.paths[i], ".jpg");
+  for (size_t i = 0; i < documents.count; ++i) {
+    const char *document = documents.paths[i];
+    cache_mkdir_p(document);
+    char *thumbnail_path = cache_image_filepath(document, ".jpg");
     filepaths_add(&thumbnails, thumbnail_path);
     if (access(thumbnail_path, F_OK))
-      thumbnail_create(pdfs.paths[i], thumbnail_path);
+      thumbnail_create(document, thumbnail_path);
     free(thumbnail_path);
   }
 
@@ -39,11 +40,11 @@ int main(void) {
   thumbnail_free();
 
   if (selected_idx >= 0) {
-    printf("Opening %s\n", pdfs.paths[selected_idx]);
-    char *args[] = {"xdg-open", pdfs.paths[selected_idx], NULL};
+    printf("Opening %s\n", documents.paths[selected_idx]);
+    char *args[] = {"xdg-open", documents.paths[selected_idx], NULL};
     execvp("xdg-open", args);
   }
 
-  filepaths_free(&pdfs);
+  filepaths_free(&documents);
   return 0;
 }

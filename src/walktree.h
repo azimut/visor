@@ -3,6 +3,6 @@
 
 #include "filepaths.h"
 
-Filepaths pdfs_find(void);
+Filepaths find_documents(void);
 
 #endif /* WALKTREE_H */
