@@ -29,7 +29,7 @@ static int callback(const char *filepath,
   if (is_directory && strcmp(filepath, ".")) {
     return 1;
   }
-  if (is_directory || !extension || strcmp(extension, ".pdf")) {
+  if (is_directory || !extension || strcasecmp(extension, ".pdf")) {
     return 0;
   }
   if (ftwbuf->level > 1) {
