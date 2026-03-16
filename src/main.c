@@ -26,7 +26,7 @@ int main(void) {
     char *thumbnail_path = cache_image_filepath(pdfs.paths[i], ".jpg");
     filepaths_add(&thumbnails, thumbnail_path);
     if (access(thumbnail_path, F_OK))
-      thumbnail_create(pdfs.paths[i], thumbnail_path, 0);
+      thumbnail_create(pdfs.paths[i], thumbnail_path);
     free(thumbnail_path);
   }
 

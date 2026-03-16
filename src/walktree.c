@@ -29,12 +29,21 @@ static int callback(const char *filepath,
   if (is_directory && strcmp(filepath, ".")) {
     return 1;
   }
-  if (is_directory || !extension || strcasecmp(extension, ".pdf")) {
+
+  if (is_directory || !extension) {
     return 0;
   }
+
+  const int is_pdf = !strcasecmp(extension, ".pdf");
+  const int is_epub = !strcasecmp(extension, ".epub");
+  if ((!is_pdf && !is_epub)) {
+    return 0;
+  }
+
   if (ftwbuf->level > 1) {
     return 0;
   }
+
   char *buf = realpath(filepath, NULL);
   filepaths_add(&pdfs, buf);
   free(buf);

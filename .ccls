@@ -15,9 +15,11 @@ gcc
 -I/usr/include/x86_64-linux-gnu//ImageMagick-6
 -I/usr/include/ImageMagick-6
 -I/usr/include/SDL2
+-I/usr/include/minizip
 -D_REENTRANT
 -lMagickWand-6.Q16
 -lMagickCore-6.Q16
 -lSDL2_gfx
 -lSDL2_image
 -lSDL2
+-lminizip

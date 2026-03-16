@@ -1,5 +1,10 @@
 #include "thumbnail.h"
 
+#include "unzip.h"
+#include <string.h>
+
+#define BUF_SIZE 8192
+
 MagickWand *magick_wand = NULL;
 
 int thumbnail_init(void) {
@@ -25,9 +30,8 @@ void thumbnail_free(void) {
   MagickWandTerminus();
 }
 
-int thumbnail_create(const char *input_pdf, const char *output_image,
-                     unsigned int page_number) {
-
+static int thumbnail_create_pdf(const char *input_pdf, const char *output_image,
+                                unsigned int page_number) {
   printf("[INFO] Converting page %d of %s ... ", page_number, input_pdf);
   MagickBooleanType status;
 
@@ -74,4 +78,66 @@ int thumbnail_create(const char *input_pdf, const char *output_image,
   }
 
   return 0;
+}
+
+static int thumbnail_create_epub(const char *input_epub,
+                                 const char *output_image) {
+  unzFile zip = unzOpen(input_epub);
+  if (!zip) {
+    fprintf(stderr, "Cannot open epub: %s", input_epub);
+    return -1;
+  }
+  if (unzGoToFirstFile(zip) != UNZ_OK) {
+    fprintf(stderr, "Empty epub?: %s", input_epub);
+    unzClose(zip);
+    return -1;
+  }
+
+  do {
+    char filename[256];
+    unz_file_info info;
+
+    if (unzGetCurrentFileInfo(zip, &info, filename, sizeof(filename), NULL, 0,
+                              NULL, 0) != UNZ_OK)
+      break;
+
+    if (strstr(filename, "cover") &&
+        (strstr(filename, ".jpg") || strstr(filename, ".jpeg") ||
+         strstr(filename, ".png"))) {
+      if (unzOpenCurrentFile(zip) != UNZ_OK)
+        break;
+
+      FILE *out = fopen(output_image, "wb");
+      if (!out) {
+        unzCloseCurrentFile(zip);
+        break;
+      }
+
+      char buf[BUF_SIZE];
+      int bytes;
+
+      while ((bytes = unzReadCurrentFile(zip, buf, BUF_SIZE)) > 0)
+        fwrite(buf, 1, bytes, out);
+
+      fclose(out);
+      unzCloseCurrentFile(zip);
+      unzClose(zip);
+
+      return 0;
+    }
+
+  } while (unzGoToNextFile(zip) == UNZ_OK);
+
+  unzClose(zip);
+  return -1;
+}
+
+int thumbnail_create(const char *input_file, const char *output_image) {
+  if (strcasestr(input_file, ".pdf")) {
+    return thumbnail_create_pdf(input_file, output_image, 0);
+  }
+  if (strcasestr(input_file, ".epub")) {
+    return thumbnail_create_epub(input_file, output_image);
+  }
+  return -1;
 }

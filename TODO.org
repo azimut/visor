@@ -1,3 +1,6 @@
+- improve EPUB support
+  - [ ] downscale cover
+  - [ ] parse extension once in a new datatype
 - overlays
   - [ ] pdf/file metadata
   - [ ] thumbnail zoom

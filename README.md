@@ -9,6 +9,7 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 
 ## Features
 
+- supports .pdf and .epub
 - shows thumbnails of pdfs on current dir in a grid
 - thumbnails cached in `~/.cache/visor/`
 - files opened with `xdg-open`
@@ -19,6 +20,7 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 - SDL2_gfx
 - SDL2_image
 - MagickWand
+- minizip
 
 ## Keybindings
 

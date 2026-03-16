@@ -4,7 +4,6 @@
 
 int thumbnail_init(void);
 void thumbnail_free(void);
-int thumbnail_create(const char *input_pdf, const char *output_image,
-                     unsigned int page_number);
+int thumbnail_create(const char *input_file, const char *output_image);
 
 #endif /* THUMBNAIL_H */
