@@ -1,7 +1,8 @@
-#include "thumbnail.h"
-
-#include "unzip.h"
 #include <string.h>
+#include <wand/MagickWand.h>
+
+#include "thumbnail.h"
+#include "unzip.h"
 
 #define BUF_SIZE 8192
 
