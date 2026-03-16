@@ -7,16 +7,6 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 - File explorers are too bloated, or too slow to startup
 - I still mainly explore directories through the console
 
-## Keybindings
-
-| key   | action     |
-|:-----:|------------|
-| h     | move left  |
-| j     | move down  |
-| k     | move up    |
-| l     | move right |
-| INTRO | select     |
-
 ## Features
 
 - shows thumbnails of pdfs on current dir in a grid
@@ -29,3 +19,13 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 - SDL2_gfx
 - SDL2_image
 - MagickWand
+
+## Keybindings
+
+| key   | action     |
+|:-----:|------------|
+| h     | move left  |
+| j     | move down  |
+| k     | move up    |
+| l     | move right |
+| INTRO | select     |
