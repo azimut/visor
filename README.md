@@ -9,6 +9,16 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 - SDL2_image
 - MagickWand
 
+## Keybindings
+
+| key   | action     |
+|:-----:|------------|
+| h     | move left  |
+| j     | move down  |
+| k     | move up    |
+| l     | move right |
+| INTRO | select     |
+
 ## Planned Features
 
 - [x] cache thumbnails
@@ -19,6 +29,9 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 - [x] respect aspect ratio on thumbnail
 - [x] hover only above valid cells
   - [x] jump to last when above
+- overlays
+  - [ ] pdf/file metadata
+  - [ ] thumbnail zoom
 - [ ] sort by filename & depth
 - [ ] fullscreen
 - [ ] lazy image rendering (no render offscreen)
