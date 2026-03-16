@@ -159,19 +159,19 @@ int window_draw(const Filepaths filepaths) {
         break;
       }
       case SDLK_h: {
-        control_update(&control, CONTROL_MOVE_LEFT);
+        control_update(&control, CONTROL_MOVE_LEFT, filepaths.count);
         break;
       }
       case SDLK_j: {
-        control_update(&control, CONTROL_MOVE_DOWN);
+        control_update(&control, CONTROL_MOVE_DOWN, filepaths.count);
         break;
       }
       case SDLK_k: {
-        control_update(&control, CONTROL_MOVE_UP);
+        control_update(&control, CONTROL_MOVE_UP, filepaths.count);
         break;
       }
       case SDLK_l: {
-        control_update(&control, CONTROL_MOVE_RIGHT);
+        control_update(&control, CONTROL_MOVE_RIGHT, filepaths.count);
         break;
       }
       case SDLK_RETURN: {
