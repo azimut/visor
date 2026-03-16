@@ -1,0 +1,19 @@
+- overlays
+  - [ ] pdf/file metadata
+  - [ ] thumbnail zoom
+- sort by
+  - [ ] filename & depth
+  - [ ] visual similarity
+    - block/perceptual hashing https://www.youtube.com/watch?v=IJ-QjDCaz-o
+      - use hamming distance
+      - using the features extracted from a RNN with Annoy https://www.youtube.com/watch?v=wDnXFXbytVk
+      - " with a vector DB https://www.youtube.com/watch?v=mBcBoGhFndY
+- [ ] fullscreen
+- [ ] lazy image rendering (no render offscreen)
+- [ ] dynamic resize of thumbnails (fake zoom)
+- [ ] dynamic resize grid based on window size
+- [ ] interactive filter by
+  - filename
+  - pdftitle
+- [ ] iterate over sudirs (OPTIONAL)
+- [ ] explore subdirs

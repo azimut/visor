@@ -4,8 +4,7 @@ CFLAGS  += $(shell pkg-config --cflags $(PKGS))
 LDFLAGS := $(shell pkg-config --libs   $(PKGS))
 CFLAGS  += $(shell sdl2-config --cflags)
 LDFLAGS += $(shell sdl2-config --libs)
-
-SRCS := $(wildcard src/*.c)
+SRCS    := $(wildcard src/*.c)
 
 main: $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
