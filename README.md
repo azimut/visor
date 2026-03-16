@@ -32,7 +32,11 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 - overlays
   - [ ] pdf/file metadata
   - [ ] thumbnail zoom
-- [ ] sort by filename & depth
+- sort by
+  - [ ] filename & depth
+  - [ ] visual similarity (aka block/perceptual hashing)
+    - https://www.youtube.com/watch?v=IJ-QjDCaz-o
+    - use hamming distance
 - [ ] fullscreen
 - [ ] lazy image rendering (no render offscreen)
 - [ ] dynamic resize of thumbnails (fake zoom)
@@ -41,3 +45,8 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
   - filename
   - pdftitle
 - [ ] iterate over sudirs (OPTIONAL)
+
+## raison d'etre
+
+- File explorer are too bloated or too slow to startup
+- I still mainly explore directories through the console
