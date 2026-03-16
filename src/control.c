@@ -31,9 +31,12 @@ void control_update(Control *control, const Control_Move movement,
   }
   const size_t new_idx = new_ypos * control->rows + new_xpos;
   if (new_idx > count - 1) {
-    return;
+    control->idx = count - 1;
+    control->xpos = SDL_fmod(count - 1, control->cols);
+    control->ypos = SDL_floor((count - 1) / control->cols);
+  } else {
+    control->idx = new_idx;
+    control->xpos = new_xpos;
+    control->ypos = new_ypos;
   }
-  control->idx = new_idx;
-  control->xpos = new_xpos;
-  control->ypos = new_ypos;
 }

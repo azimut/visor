@@ -18,6 +18,7 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
   - [ ] non square grids
 - [x] respect aspect ratio on thumbnail
 - [x] hover only above valid cells
+  - [x] jump to last when above
 - [ ] sort by filename & depth
 - [ ] fullscreen
 - [ ] lazy image rendering (no render offscreen)
