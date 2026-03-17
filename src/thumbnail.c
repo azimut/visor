@@ -34,6 +34,7 @@ void thumbnail_free(void) {
 static int thumbnail_create_pdf(const char *input_pdf, const char *output_image,
                                 unsigned int page_number) {
   printf("[INFO] Converting page %d of %s ... ", page_number, input_pdf);
+  fflush(stdout);
   MagickBooleanType status;
 
   // 4. Read the specific page from the PDF file.
@@ -135,14 +136,10 @@ static int thumbnail_create_epub(const char *input_epub,
 
 int thumbnail_create(const File input_file, const char *output_image) {
   switch (input_file.extension) {
-  case EXTENSION_PDF: {
+  case EXTENSION_PDF:
     return thumbnail_create_pdf(input_file.path, output_image, 0);
-    break;
-  }
-  case EXTENSION_EPUB: {
+  case EXTENSION_EPUB:
     return thumbnail_create_epub(input_file.path, output_image);
-    break;
-  }
   default:
     break;
   }
