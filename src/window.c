@@ -64,8 +64,8 @@ int window_init(void) {
     SDL_LogError(SDL_LOG_PRIORITY_ERROR, "Starting SDL...");
     return 1;
   }
-  window = SDL_CreateWindow(TITLE, POS, POS, WIDTH, HEIGHT,
-                            SDL_WINDOW_FULLSCREEN_DESKTOP);
+  window =
+      SDL_CreateWindow(TITLE, POS, POS, -1, -1, SDL_WINDOW_FULLSCREEN_DESKTOP);
   if (!window) {
     SDL_LogError(SDL_LOG_PRIORITY_ERROR, "Creating window");
     return 1;
