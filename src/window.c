@@ -47,7 +47,7 @@ void textures_add(Textures *textures, const char *imagepath) {
 Textures textures_from_filepaths(const Filepaths filepaths) {
   Textures textures = textures_new();
   for (size_t i = 0; i < filepaths.count; ++i)
-    textures_add(&textures, filepaths.paths[i]);
+    textures_add(&textures, filepaths.files[i].path);
   return textures;
 }
 

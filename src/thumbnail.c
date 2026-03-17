@@ -1,8 +1,8 @@
 #include <string.h>
+#include <unzip.h>
 #include <wand/MagickWand.h>
 
 #include "thumbnail.h"
-#include "unzip.h"
 
 #define BUF_SIZE 8192
 
@@ -133,12 +133,18 @@ static int thumbnail_create_epub(const char *input_epub,
   return -1;
 }
 
-int thumbnail_create(const char *input_file, const char *output_image) {
-  if (strcasestr(input_file, ".pdf")) {
-    return thumbnail_create_pdf(input_file, output_image, 0);
+int thumbnail_create(const File input_file, const char *output_image) {
+  switch (input_file.extension) {
+  case EXTENSION_PDF: {
+    return thumbnail_create_pdf(input_file.path, output_image, 0);
+    break;
   }
-  if (strcasestr(input_file, ".epub")) {
-    return thumbnail_create_epub(input_file, output_image);
+  case EXTENSION_EPUB: {
+    return thumbnail_create_epub(input_file.path, output_image);
+    break;
+  }
+  default:
+    break;
   }
   return -1;
 }

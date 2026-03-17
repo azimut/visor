@@ -3,8 +3,20 @@
 
 #include <stdlib.h>
 
-typedef struct Filepaths {
-  char **paths;
+typedef enum {
+  EXTENSION_PDF = 0,
+  EXTENSION_EPUB,
+  EXTENSION_IMAGE,
+  EXTENSION_UNKNOWN
+} Extension;
+
+typedef struct File {
+  char *path;
+  Extension extension;
+} File;
+
+typedef struct Files {
+  File *files;
   size_t capacity;
   size_t count;
 } Filepaths;
