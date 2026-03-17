@@ -64,7 +64,8 @@ int window_init(void) {
     SDL_LogError(SDL_LOG_PRIORITY_ERROR, "Starting SDL...");
     return 1;
   }
-  window = SDL_CreateWindow(TITLE, POS, POS, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+  window = SDL_CreateWindow(TITLE, POS, POS, WIDTH, HEIGHT,
+                            SDL_WINDOW_FULLSCREEN_DESKTOP);
   if (!window) {
     SDL_LogError(SDL_LOG_PRIORITY_ERROR, "Creating window");
     return 1;
@@ -133,12 +134,14 @@ int window_draw(const Filepaths filepaths) {
   int selected_idx = -1;
   const int nrows = SDL_ceil(SDL_sqrt(filepaths.count));
   const int ncols = SDL_ceil(SDL_sqrt(filepaths.count));
-  const Screen screen = (Screen){.width = WIDTH,
-                                 .height = HEIGHT,
+  SDL_Rect dims;
+  SDL_GetDisplayBounds(0, &dims);
+  const Screen screen = (Screen){.width = dims.w,
+                                 .height = dims.h,
                                  .cols = ncols,
                                  .rows = nrows,
-                                 .cellwidth = WIDTH / ncols,
-                                 .cellheight = HEIGHT / nrows};
+                                 .cellwidth = dims.w / ncols,
+                                 .cellheight = dims.h / nrows};
   Control control = control_new(screen.cols, screen.rows);
   Textures textures = textures_from_filepaths(filepaths);
   SDL_Log("screen.cols = %d   screen.rows = %d", screen.cols, screen.rows);
