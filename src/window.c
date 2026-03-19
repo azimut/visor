@@ -11,7 +11,7 @@
 #define HEIGHT 480
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
-#define BORDER_THICKNESS 5
+#define BORDER 5
 #define THUMB_ASPECT 1.1
 
 SDL_Window *window = NULL;
@@ -121,10 +121,10 @@ static void window_draw_control(SDL_Rect thumb_rect) {
   const int tly = thumb_rect.y;
   const int trx = tlx + thumb_rect.w;
   const int bry = thumb_rect.y + thumb_rect.h;
-  thickLineRGBA(renderer, tlx, tly, trx, tly, BORDER_THICKNESS, r, g, b, 255);
-  thickLineRGBA(renderer, trx, tly, trx, bry, BORDER_THICKNESS, r, g, b, 255);
-  thickLineRGBA(renderer, trx, bry, tlx, bry, BORDER_THICKNESS, r, g, b, 255);
-  thickLineRGBA(renderer, tlx, bry, tlx, tly, BORDER_THICKNESS, r, g, b, 255);
+  thickLineRGBA(renderer, tlx - 2, tly, trx + 2, tly, BORDER, r, g, b, 255);
+  thickLineRGBA(renderer, trx, tly, trx, bry, BORDER, r, g, b, 255);
+  thickLineRGBA(renderer, trx + 2, bry, tlx - 2, bry, BORDER, r, g, b, 255);
+  thickLineRGBA(renderer, tlx, bry, tlx, tly, BORDER, r, g, b, 255);
 }
 
 // Returns the selected index, or -1
