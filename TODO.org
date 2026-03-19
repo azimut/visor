@@ -1,7 +1,6 @@
 - [ ] simpler non recursive implementation by default
   - opendir, readdir
   - argv to for deep (?
-- [ ] thighter selection border
 - [ ] support .docx
 - [ ] support .ppt
 - improve EPUB support

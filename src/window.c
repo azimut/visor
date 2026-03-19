@@ -115,18 +115,16 @@ static SDL_Rect thumbnail_rect(const size_t idx, const Screen screen,
                     .h = thumbsize.y};
 }
 
-static void window_draw_control(const Control control, const Screen screen) {
-  const int w = screen.width / screen.cols;
-  const int h = screen.height / screen.rows;
-  const int xtl = control.xpos * w, ytl = control.ypos * h;
-  const int xtr = xtl + w, ytr = ytl;
-  const int xbr = xtr, ybr = ytr + h;
-  const int xbl = xtl, ybl = ybr;
-  const int r = 40, g = 255, b = 0;
-  thickLineRGBA(renderer, xtl, ytl, xtr, ytr, BORDER_THICKNESS, r, g, b, 255);
-  thickLineRGBA(renderer, xtr, ytr, xbr, ybr, BORDER_THICKNESS, r, g, b, 255);
-  thickLineRGBA(renderer, xbr, ybr, xbl, ybl, BORDER_THICKNESS, r, g, b, 255);
-  thickLineRGBA(renderer, xbl, ybl, xtl, ytl, BORDER_THICKNESS, r, g, b, 255);
+static void window_draw_control(SDL_Rect thumb_rect) {
+  const int r = 0, g = 255, b = 0;
+  const int tlx = thumb_rect.x;
+  const int tly = thumb_rect.y;
+  const int trx = tlx + thumb_rect.w;
+  const int bry = thumb_rect.y + thumb_rect.h;
+  thickLineRGBA(renderer, tlx, tly, trx, tly, BORDER_THICKNESS, r, g, b, 255);
+  thickLineRGBA(renderer, trx, tly, trx, bry, BORDER_THICKNESS, r, g, b, 255);
+  thickLineRGBA(renderer, trx, bry, tlx, bry, BORDER_THICKNESS, r, g, b, 255);
+  thickLineRGBA(renderer, tlx, bry, tlx, tly, BORDER_THICKNESS, r, g, b, 255);
 }
 
 // Returns the selected index, or -1
@@ -195,8 +193,9 @@ int window_draw(const Filepaths filepaths) {
       SDL_Texture *texture = textures.texture[idx];
       SDL_Rect rect = thumbnail_rect(idx, screen, texture);
       SDL_RenderCopy(renderer, texture, NULL, &rect);
+      if (idx == control.idx)
+        window_draw_control(rect);
     }
-    window_draw_control(control, screen);
     SDL_RenderPresent(renderer);
   }
   textures_free(&textures);
