@@ -9,7 +9,7 @@
 
 int main(void) {
 
-  Filepaths documents = find_documents();
+  Filepaths documents = find_documents(0);
   if (documents.count == 0) {
     fprintf(stderr, "No documents found in directory :/\n");
     return 1;

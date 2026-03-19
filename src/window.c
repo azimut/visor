@@ -12,7 +12,7 @@
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
 #define BORDER 7
-#define THUMB_ASPECT 1.1
+#define THUMB_ASPECT 1.2
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;

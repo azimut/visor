@@ -3,6 +3,6 @@
 
 #include "filepaths.h"
 
-Filepaths find_documents(void);
+Filepaths find_documents(const unsigned int depth);
 
 #endif /* WALKTREE_H */

@@ -3,6 +3,7 @@
 
 #include "walktree.h"
 
+#include <dirent.h>
 #include <ftw.h>
 #include <libgen.h>
 #include <limits.h>
@@ -50,8 +51,26 @@ static int callback(const char *filepath,
   return 0;
 }
 
-Filepaths find_documents(void) {
+Filepaths find_documents(const unsigned int depth) {
   pdfs = filepaths_new();
-  nftw(".", callback, 10, FTW_DEPTH);
+  if (depth == 0) {
+    DIR *dir = opendir(".");
+    struct dirent *current;
+    while ((current = readdir(dir))) {
+      if (current->d_type != DT_REG) {
+        continue;
+      }
+      const int is_pdf = !strcasestr(current->d_name, ".pdf");
+      const int is_epub = !strcasestr(current->d_name, ".epub");
+      if (!(is_pdf && is_epub)) {
+        char *buf = realpath(current->d_name, NULL);
+        filepaths_add(&pdfs, buf);
+        free(buf);
+      }
+    }
+    closedir(dir);
+  } else {
+    nftw(".", callback, 10, FTW_DEPTH);
+  }
   return pdfs;
 }
