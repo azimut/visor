@@ -45,9 +45,7 @@ static int callback(const char *filepath,
     return 0;
   }
 
-  char *buf = realpath(filepath, NULL);
-  filepaths_add(&pdfs, buf);
-  free(buf);
+  filepaths_add(&pdfs, filepath);
   return 0;
 }
 
@@ -63,9 +61,7 @@ Filepaths find_documents(const unsigned int depth) {
       const int is_pdf = !strcasestr(current->d_name, ".pdf");
       const int is_epub = !strcasestr(current->d_name, ".epub");
       if (!(is_pdf && is_epub)) {
-        char *buf = realpath(current->d_name, NULL);
-        filepaths_add(&pdfs, buf);
-        free(buf);
+        filepaths_add(&pdfs, current->d_name);
       }
     }
     closedir(dir);

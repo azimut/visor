@@ -18,7 +18,7 @@ void filepaths_add(Filepaths *filepaths, const char *path) {
         reallocarray(filepaths->files, filepaths->capacity, sizeof(File));
   }
   const size_t idx = filepaths->count;
-  filepaths->files[idx].path = strdup(path);
+  filepaths->files[idx].path = realpath(path, NULL);
   if (strcasestr(path, ".pdf"))
     filepaths->files[idx].extension = EXTENSION_PDF;
   else if (strcasestr(path, ".epub"))
