@@ -122,8 +122,11 @@ static void window_draw_control(SDL_Rect thumb_rect) {
 // Returns the selected index, or -1
 int window_draw(const Filepaths filepaths) {
   int selected_idx = -1;
-  const int nrows = SDL_ceil(SDL_sqrt(filepaths.count));
   const int ncols = SDL_ceil(SDL_sqrt(filepaths.count));
+  int nrows = SDL_ceil(SDL_sqrt(filepaths.count));
+  if ((ncols * (nrows - 1)) > filepaths.count) {
+    nrows--;
+  }
   SDL_Rect dims;
   SDL_GetDisplayBounds(0, &dims);
   const Screen screen = (Screen){.width = dims.w,

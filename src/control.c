@@ -38,7 +38,7 @@ void control_update(Control *control, const Control_Move movement,
     break;
   }
   }
-  const size_t new_idx = new_ypos * control->nrows + new_xpos;
+  const size_t new_idx = new_ypos * control->ncols + new_xpos;
   const size_t max_idx = total_size - 1;
   if (new_idx > max_idx) {
     control->idx = max_idx;
