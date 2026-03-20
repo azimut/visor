@@ -18,11 +18,23 @@ void control_update(Control *control, const Control_Move movement,
     break;
   }
   case CONTROL_MOVE_LEFT: {
-    new_xpos = SDL_max(control->xpos - 1, 0);
+    new_xpos = control->xpos - 1;
+    if (new_xpos < 0) {
+      if (new_ypos == 0) {
+        new_xpos = 0;
+      } else {
+        new_xpos = control->ncols - 1;
+        new_ypos -= 1;
+      }
+    }
     break;
   }
   case CONTROL_MOVE_RIGHT: {
-    new_xpos = SDL_min(control->xpos + 1, control->ncols - 1);
+    new_xpos = control->xpos + 1;
+    if (new_xpos > control->ncols - 1) {
+      new_xpos = 0;
+      new_ypos += 1;
+    }
     break;
   }
   }
