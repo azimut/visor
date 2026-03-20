@@ -1,6 +1,5 @@
-- [ ] simpler non recursive implementation by default
-  - opendir, readdir
-  - argv to for deep (?
+- args
+  - depth
 - [ ] support .docx
 - [ ] support .ppt
 - improve EPUB support
@@ -22,5 +21,4 @@
 - [ ] interactive filter by
   - filename
   - pdftitle
-- [ ] iterate over sudirs (OPTIONAL)
-- [ ] explore subdirs
+- [ ] icon for subdirs navigation

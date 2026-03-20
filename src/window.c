@@ -18,9 +18,9 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 
 typedef struct Screen {
-  int width, height;
-  int cols, rows;
-  int cellwidth, cellheight;
+  const int width, height;
+  const int cols, rows;
+  const int cellwidth, cellheight;
 } Screen;
 
 typedef struct Textures {

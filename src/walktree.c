@@ -12,32 +12,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-Filepaths pdfs = {0};
-
-static char *file_extension(const char *filepath) {
-  char *buf1 = strndup(filepath, 999);
-  char *filename = basename(buf1);
-  char *extension = strrchr(filename, '.');
-  return extension == filename ? NULL : extension;
-}
+Documents pdfs = {0};
 
 static int callback(const char *filepath,
                     __attribute__((unused)) const struct stat *sb, int tflag,
                     struct FTW *ftwbuf) {
   const bool is_directory = tflag == FTW_D;
-  const char *extension = file_extension(filepath);
 
   if (is_directory && strcmp(filepath, ".")) {
     return 1;
   }
 
-  if (is_directory || !extension) {
-    return 0;
-  }
-
-  const int is_pdf = !strcasecmp(extension, ".pdf");
-  const int is_epub = !strcasecmp(extension, ".epub");
-  if ((!is_pdf && !is_epub)) {
+  if (is_directory) {
     return 0;
   }
 
@@ -45,12 +31,17 @@ static int callback(const char *filepath,
     return 0;
   }
 
-  filepaths_add(&pdfs, filepath);
+  Document *doc = document_new(filepath);
+  if (doc) {
+    documents_add(&pdfs, *doc);
+  }
+  free(doc);
+
   return 0;
 }
 
-Filepaths find_documents(const unsigned int depth) {
-  pdfs = filepaths_new();
+Documents find_documents(const unsigned int depth) {
+  pdfs = documents_new();
   if (depth == 0) {
     DIR *dir = opendir(".");
     struct dirent *current;
@@ -58,11 +49,11 @@ Filepaths find_documents(const unsigned int depth) {
       if (current->d_type != DT_REG) {
         continue;
       }
-      const int is_pdf = !strcasestr(current->d_name, ".pdf");
-      const int is_epub = !strcasestr(current->d_name, ".epub");
-      if (!(is_pdf && is_epub)) {
-        filepaths_add(&pdfs, current->d_name);
+      Document *doc = document_new(current->d_name);
+      if (doc) {
+        documents_add(&pdfs, *doc);
       }
+      free(doc);
     }
     closedir(dir);
   } else {

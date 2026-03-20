@@ -134,14 +134,12 @@ static int thumbnail_create_epub(const char *input_epub,
   return -1;
 }
 
-int thumbnail_create(const File input_file, const char *output_image) {
-  switch (input_file.extension) {
-  case EXTENSION_PDF:
+int thumbnail_create(const Document input_file, const char *output_image) {
+  switch (input_file.format) {
+  case FORMAT_PDF:
     return thumbnail_create_pdf(input_file.path, output_image, 0);
-  case EXTENSION_EPUB:
+  case FORMAT_EPUB:
     return thumbnail_create_epub(input_file.path, output_image);
-  default:
-    break;
   }
   return -1;
 }

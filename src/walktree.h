@@ -1,8 +1,8 @@
 #ifndef WALKTREE_H
 #define WALKTREE_H
 
-#include "filepaths.h"
+#include "documents.h"
 
-Filepaths find_documents(const unsigned int depth);
+Documents find_documents(const unsigned int depth);
 
 #endif /* WALKTREE_H */
