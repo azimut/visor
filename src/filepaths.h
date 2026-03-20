@@ -3,16 +3,8 @@
 
 #include <stdlib.h>
 
-typedef enum {
-  EXTENSION_PDF = 0,
-  EXTENSION_EPUB,
-  EXTENSION_IMAGE,
-  EXTENSION_UNKNOWN
-} Extension;
-
 typedef struct File {
   char *path;
-  Extension extension;
 } File;
 
 typedef struct Files {

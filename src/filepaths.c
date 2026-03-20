@@ -19,14 +19,6 @@ void filepaths_add(Filepaths *filepaths, const char *path) {
   }
   const size_t idx = filepaths->count;
   filepaths->files[idx].path = strdup(path);
-  if (strcasestr(path, ".pdf"))
-    filepaths->files[idx].extension = EXTENSION_PDF;
-  else if (strcasestr(path, ".epub"))
-    filepaths->files[idx].extension = EXTENSION_EPUB;
-  else if (strcasestr(path, ".jpg") || strcasestr(path, ".png"))
-    filepaths->files[idx].extension = EXTENSION_IMAGE;
-  else
-    filepaths->files[idx].extension = EXTENSION_UNKNOWN;
   filepaths->count++;
 }
 
