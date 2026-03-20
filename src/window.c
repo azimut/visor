@@ -154,18 +154,22 @@ int window_draw(const Filepaths filepaths) {
         quit = true;
         break;
       }
+      case SDLK_LEFT:
       case SDLK_h: {
         control_update(&control, CONTROL_MOVE_LEFT, filepaths.count);
         break;
       }
+      case SDLK_DOWN:
       case SDLK_j: {
         control_update(&control, CONTROL_MOVE_DOWN, filepaths.count);
         break;
       }
+      case SDLK_UP:
       case SDLK_k: {
         control_update(&control, CONTROL_MOVE_UP, filepaths.count);
         break;
       }
+      case SDLK_RIGHT:
       case SDLK_l: {
         control_update(&control, CONTROL_MOVE_RIGHT, filepaths.count);
         break;

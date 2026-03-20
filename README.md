@@ -26,7 +26,7 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 
 | **key** | **action** | **key** | **action** |
 |:-------:|------------|:-------:|------------|
-| h       | move left  | INTRO   | select     |
-| j       | move down  | q       | exit       |
-| k       | move up    |         |            |
-| l       | move right |         |            |
+| ↑ / k   | move up    | q       | exit       |
+| ↓ / j   | move down  | intro   | select     |
+| ← / h   | move left  |         |            |
+| → / l   | move right |         |            |
