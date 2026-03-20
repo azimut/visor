@@ -19,7 +19,6 @@ int main(void) {
     fprintf(stderr, "Failed to initialize MagickWand.\n");
     return 1;
   }
-
   Filepaths thumbnails = filepaths_new();
   for (size_t i = 0; i < documents.count; ++i) {
     const char *document = documents.arr[i].path;
@@ -30,6 +29,7 @@ int main(void) {
       thumbnail_create(documents.arr[i], thumbnail_path);
     free(thumbnail_path);
   }
+  thumbnail_free();
 
   if (window_init()) {
     fprintf(stderr, "Failed to init window.\n");
@@ -37,7 +37,6 @@ int main(void) {
   }
   int selected_idx = window_draw(thumbnails);
   window_free();
-  thumbnail_free();
 
   if (selected_idx >= 0) {
     printf("Opening %s\n", documents.arr[selected_idx].path);
