@@ -5,6 +5,7 @@
 #include "thumbnail.h"
 
 #define BUF_SIZE 8192
+#define IMG_SIZE 500
 
 MagickWand *magick_wand = NULL;
 
@@ -65,11 +66,17 @@ static int thumbnail_create_pdf(const char *input_pdf, const char *output_image,
   // 6. Set image compression quality (optional, for formats like JPEG)
   MagickSetImageCompressionQuality(magick_wand, 90);
 
-  size_t width = MagickGetImageWidth(magick_wand);
-  size_t height = MagickGetImageHeight(magick_wand);
-  float factor = 0.5;
-
-  MagickAdaptiveResizeImage(magick_wand, width * factor, height * factor);
+  const size_t orig_width = MagickGetImageWidth(magick_wand);
+  const size_t orig_height = MagickGetImageHeight(magick_wand);
+  size_t width, height;
+  if (orig_width > orig_height) {
+    width = IMG_SIZE;
+    height = IMG_SIZE * (double)orig_height / orig_width;
+  } else {
+    width = IMG_SIZE * (double)orig_width / orig_height;
+    height = IMG_SIZE;
+  }
+  MagickAdaptiveResizeImage(magick_wand, width, height);
 
   // 7. Write the image to a file
   status = MagickWriteImage(magick_wand, output_image);
