@@ -1,11 +1,11 @@
 #include "control.h"
 
-Control control_new(const int cols, const int rows) {
-  return (Control){.cols = cols, .rows = rows};
+Control control_new(const int ncols, const int nrows) {
+  return (Control){.ncols = ncols, .nrows = nrows};
 }
 
 void control_update(Control *control, const Control_Move movement,
-                    const size_t count) {
+                    const size_t total_size) {
   int new_xpos = control->xpos;
   int new_ypos = control->ypos;
   switch (movement) {
@@ -14,7 +14,7 @@ void control_update(Control *control, const Control_Move movement,
     break;
   }
   case CONTROL_MOVE_DOWN: {
-    new_ypos = SDL_min(control->ypos + 1, control->rows - 1);
+    new_ypos = SDL_min(control->ypos + 1, control->nrows - 1);
     break;
   }
   case CONTROL_MOVE_LEFT: {
@@ -22,15 +22,16 @@ void control_update(Control *control, const Control_Move movement,
     break;
   }
   case CONTROL_MOVE_RIGHT: {
-    new_xpos = SDL_min(control->xpos + 1, control->cols - 1);
+    new_xpos = SDL_min(control->xpos + 1, control->ncols - 1);
     break;
   }
   }
-  const size_t new_idx = new_ypos * control->rows + new_xpos;
-  if (new_idx > count - 1) {
-    control->idx = count - 1;
-    control->xpos = SDL_fmod(count - 1, control->cols);
-    control->ypos = SDL_floor((count - 1) / control->cols);
+  const size_t new_idx = new_ypos * control->nrows + new_xpos;
+  const size_t max_idx = total_size - 1;
+  if (new_idx > max_idx) {
+    control->idx = max_idx;
+    control->xpos = SDL_fmod(max_idx, control->ncols);
+    control->ypos = SDL_floor((double)max_idx / control->ncols);
   } else {
     control->idx = new_idx;
     control->xpos = new_xpos;

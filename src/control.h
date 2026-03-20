@@ -5,7 +5,7 @@
 
 typedef struct Control {
   int xpos, ypos;
-  int cols, rows;
+  const int ncols, nrows;
   size_t idx;
 } Control;
 
@@ -16,7 +16,7 @@ typedef enum {
   CONTROL_MOVE_LEFT,
 } Control_Move;
 
-Control control_new(const int cols, const int rows);
-void control_update(Control *, const Control_Move, const size_t count);
+Control control_new(const int ncols, const int nrows);
+void control_update(Control *, const Control_Move, const size_t total_size);
 
 #endif /* CONTROL_H */
