@@ -87,18 +87,10 @@ static SDL_Point texture_size(SDL_Texture *texture) {
 static SDL_Point thumbnail_size(SDL_Texture *texture, const Screen screen) {
   SDL_Point result;
   const SDL_Point texsize = texture_size(texture);
-  if (texsize.x > texsize.y) {
-    const double width = (double)screen.cellwidth / THUMB_ASPECT;
-    const double aspect = ((double)texsize.y / texsize.x);
-    result.x = width;
-    result.y = width * aspect;
-
-  } else {
-    const double height = (double)screen.cellheight / THUMB_ASPECT;
-    const double aspect = ((double)texsize.x / texsize.y);
-    result.x = height * aspect;
-    result.y = height;
-  }
+  const double height = (double)screen.cellheight / THUMB_ASPECT;
+  const double aspect = ((double)texsize.x / texsize.y);
+  result.x = height * aspect;
+  result.y = height;
   return result;
 }
 
