@@ -14,6 +14,7 @@ int main(void) {
     fprintf(stderr, "No documents found in directory :/\n");
     return 1;
   }
+  printf("[INFO] %ld documents found!\n", documents.count);
 
   if (thumbnail_init()) {
     fprintf(stderr, "Failed to initialize MagickWand.\n");
