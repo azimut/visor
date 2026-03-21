@@ -28,5 +28,5 @@ A poor's man file explorer. But only for pdf documents. Keyboard centric. NOT a 
 |:-------:|------------|:-------:|------------|
 | ↑ / k   | move up    | q       | exit       |
 | ↓ / j   | move down  | intro   | select     |
-| ← / h   | move left  |         |            |
+| ← / h   | move left  | i       | preview    |
 | → / l   | move right |         |            |

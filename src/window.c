@@ -44,7 +44,7 @@ void textures_add(Textures *textures, const char *imagepath) {
   textures->texture[textures->count++] = new_texture;
 }
 
-Textures textures_from_filepaths(const Thumbnails filepaths) {
+Textures textures_from_documents(const Thumbnails filepaths) {
   Textures textures = textures_new();
   for (size_t i = 0; i < filepaths.count; ++i)
     textures_add(&textures, filepaths.arr[i].path);
@@ -107,6 +107,17 @@ static SDL_Rect thumbnail_rect(const size_t idx, const Screen screen,
                     .h = thumbsize.y};
 }
 
+static void render_preview(const Control control, const Screen screen,
+                           const Textures textures) {
+
+  SDL_Texture *tex = textures.texture[control.idx];
+  const SDL_Point tex_size = texture_size(tex);
+  const int x = (screen.width / 2.0) - (tex_size.x / 2.0);
+  const int y = (screen.height / 2.0) - (tex_size.y / 2.0);
+  const SDL_Rect rect = {.x = x, .y = y, .w = tex_size.x, .h = tex_size.y};
+  SDL_RenderCopy(renderer, tex, NULL, &rect);
+}
+
 static void window_draw_control(SDL_Rect thumb_rect) {
   const int r = 0, g = 255, b = 0;
   const int tlx = thumb_rect.x;
@@ -136,19 +147,32 @@ int window_draw(const Thumbnails filepaths) {
                                  .cellwidth = dims.w / ncols,
                                  .cellheight = dims.h / nrows};
   Control control = control_new(screen.cols, screen.rows);
-  Textures textures = textures_from_filepaths(filepaths);
+  Textures textures = textures_from_documents(filepaths);
   SDL_Log("screen.cols = %d   screen.rows = %d", screen.cols, screen.rows);
   SDL_Log("filepaths.count = %ld", filepaths.count);
   SDL_Log("textures.count = %ld", textures.count);
   bool quit = false;
+  bool preview = false;
   while (!quit) {
     SDL_Event e;
     SDL_WaitEvent(&e);
     if (e.type == SDL_QUIT) {
       quit = true;
     }
+    if (e.type == SDL_KEYUP) {
+      switch (e.key.keysym.sym) {
+      case SDLK_i: {
+        preview = false;
+        break;
+      }
+      }
+    }
     if (e.type == SDL_KEYDOWN) {
       switch (e.key.keysym.sym) {
+      case SDLK_i: {
+        preview = true;
+        break;
+      }
       case SDLK_ESCAPE:
       case SDLK_q: {
         quit = true;
@@ -194,6 +218,9 @@ int window_draw(const Thumbnails filepaths) {
       SDL_RenderCopy(renderer, texture, NULL, &rect);
       if (idx == control.idx)
         window_draw_control(rect);
+    }
+    if (preview) {
+      render_preview(control, screen, textures);
     }
     SDL_RenderPresent(renderer);
   }
