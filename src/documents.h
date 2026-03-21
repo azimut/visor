@@ -6,6 +6,8 @@
 typedef enum {
   FORMAT_PDF = 0,
   FORMAT_EPUB,
+  FORMAT_PPT,
+  FORMAT_DOC,
 } Format;
 
 typedef struct Document {

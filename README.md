@@ -1,6 +1,6 @@
 # visor
 
-A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reader, just a file explorer and launcher for your pdf viewer.
+A poor's man file explorer. But only for pdf documents. Keyboard centric. NOT a pdf reader, just a file explorer and launcher.
 
 ## raison d'etre
 
@@ -9,7 +9,7 @@ A poor's man file explorer. But only for pdfs. Keyboard centric. NOT a pdf reade
 
 ## Features
 
-- supports .pdf and .epub
+- supports `.pdf`, `.epub`, `.doc`, and `.ppt`
 - shows thumbnails of pdfs on current dir in a grid
 - thumbnails cached in `~/.cache/visor/`
 - files opened with `xdg-open`

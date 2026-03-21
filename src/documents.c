@@ -14,6 +14,10 @@ Document *document_new(const char *rawpath) {
     format = FORMAT_PDF;
   else if (!strcasecmp(extension, ".epub"))
     format = FORMAT_EPUB;
+  else if (!strcasecmp(extension, ".ppt"))
+    format = FORMAT_PPT;
+  else if (!strcasecmp(extension, ".doc"))
+    format = FORMAT_DOC;
   else
     return NULL;
 

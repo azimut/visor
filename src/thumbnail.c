@@ -145,6 +145,8 @@ static int thumbnail_create_epub(const char *input_epub,
 
 static int thumbnail_create(const Document document, const char *output_image) {
   switch (document.format) {
+  case FORMAT_DOC:
+  case FORMAT_PPT:
   case FORMAT_PDF:
     return thumbnail_create_pdf(document.path, output_image, 0);
   case FORMAT_EPUB:

@@ -1,7 +1,8 @@
 - args
+  - clean up
   - depth
-- [ ] support .docx
-- [ ] support .ppt
+    - show subdirs with pdfs inside
+      - skip empty (with no pdfs) subdirs
 - improve EPUB support
   - [ ] downscale cover
   - [ ] parse extension once in a new datatype
@@ -18,7 +19,6 @@
 - [ ] lazy image rendering (no render offscreen)
 - [ ] dynamic resize of thumbnails (fake zoom)
 - [ ] dynamic resize grid based on window size
-- [ ] interactive filter by
+- [ ] FILTER by
   - filename
   - pdftitle
-- [ ] icon for subdirs navigation
