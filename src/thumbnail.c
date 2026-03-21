@@ -166,7 +166,7 @@ static Thumbnails thumbnails_new(void) {
                       .capacity = INIT_CAPACITY};
 }
 
-static void thumbnails_add(Thumbnails *thumbs, Thumbnail thumb) {
+static void thumbnails_add(Thumbnails *thumbs, const Thumbnail thumb) {
   if (thumbs->capacity == thumbs->count) {
     thumbs->capacity += INIT_CAPACITY;
     thumbs->arr =
@@ -188,10 +188,7 @@ Thumbnails thumbnails_from_docs(const Documents docs) {
   return thumbs;
 }
 
-void thumbails_free(Thumbnails *thumbs) {
-  for (size_t i = 0; i < thumbs->capacity; ++i) {
-    free(thumbs->arr[i].path);
-  }
+void thumbnails_free(Thumbnails *thumbs) {
   free(thumbs->arr);
   thumbs = NULL;
 }

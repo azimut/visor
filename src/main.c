@@ -21,7 +21,6 @@ int main(void) {
     fprintf(stderr, "Failed to init window.\n");
     return 1;
   }
-
   int selected_idx = window_draw(thumbnails);
   window_free();
 
@@ -32,7 +31,7 @@ int main(void) {
   }
 
   documents_free(&documents);
-  thumbails_free(&thumbnails);
+  thumbnails_free(&thumbnails);
 
   return 0;
 }

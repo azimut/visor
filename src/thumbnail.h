@@ -14,6 +14,6 @@ typedef struct Thumbnails {
 } Thumbnails;
 
 Thumbnails thumbnails_from_docs(const Documents);
-void thumbails_free(Thumbnails *);
+void thumbnails_free(Thumbnails *);
 
 #endif /* THUMBNAIL_H */
