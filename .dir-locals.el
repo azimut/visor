@@ -4,7 +4,7 @@
                               command-cwd dape-command-cwd
                               command "/usr/local/bin/gdb"
                               command-args ("--interpreter=dap")
-                              compile "make -B"
+                              compile "make -B DEBUG=1"
                               :request "launch"
                               :program "main"
                               :stopAtBeginningOfMainSubprogram t))))))

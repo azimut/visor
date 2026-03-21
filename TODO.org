@@ -5,7 +5,6 @@
       - skip empty (with no pdfs) subdirs
 - improve EPUB support
   - [ ] downscale cover
-  - [ ] parse extension once in a new datatype
 - overlays
   - [ ] pdf/file metadata
   - [ ] thumbnail zoom
@@ -16,6 +15,7 @@
       - use hamming distance
       - using the features extracted from a RNN with Annoy https://www.youtube.com/watch?v=wDnXFXbytVk
       - " with a vector DB https://www.youtube.com/watch?v=mBcBoGhFndY
+- [ ] different border control colors for different document type
 - [ ] lazy image rendering (no render offscreen)
 - [ ] dynamic resize of thumbnails (fake zoom)
 - [ ] dynamic resize grid based on window size
