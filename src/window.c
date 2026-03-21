@@ -107,9 +107,8 @@ static SDL_Rect thumbnail_rect(const size_t idx, const Screen screen,
                     .h = thumbsize.y};
 }
 
-static void render_preview(const Control control, const Screen screen,
-                           const Textures textures) {
-
+static void view_preview(const Control control, const Screen screen,
+                         const Textures textures) {
   SDL_Texture *tex = textures.texture[control.idx];
   const SDL_Point tex_size = texture_size(tex);
   const int x = (screen.width / 2.0) - (tex_size.x / 2.0);
@@ -118,7 +117,7 @@ static void render_preview(const Control control, const Screen screen,
   SDL_RenderCopy(renderer, tex, NULL, &rect);
 }
 
-static void window_draw_control(SDL_Rect thumb_rect) {
+static void view_control(SDL_Rect thumb_rect) {
   const int r = 0, g = 255, b = 0;
   const int tlx = thumb_rect.x;
   const int tly = thumb_rect.y;
@@ -128,6 +127,18 @@ static void window_draw_control(SDL_Rect thumb_rect) {
   thickLineRGBA(renderer, trx, tly, trx, bry, BORDER, r, g, b, 255);
   thickLineRGBA(renderer, trx + 3, bry, tlx - 3, bry, BORDER, r, g, b, 255);
   thickLineRGBA(renderer, tlx, bry, tlx, tly, BORDER, r, g, b, 255);
+}
+
+static void view_textures(const Textures textures, const Control control,
+                          const Screen screen) {
+  SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
+  for (size_t idx = 0; idx < textures.count; ++idx) {
+    SDL_Texture *texture = textures.texture[idx];
+    SDL_Rect rect = thumbnail_rect(idx, screen, texture);
+    SDL_RenderCopy(renderer, texture, NULL, &rect);
+    if (idx == control.idx)
+      view_control(rect);
+  }
 }
 
 // Returns the selected index, or -1
@@ -211,17 +222,11 @@ int window_draw(const Thumbnails filepaths) {
     }
     SDL_SetRenderDrawColor(renderer, 0x0A, 0x0A, 0x0A, 0xFF);
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
-    for (size_t idx = 0; idx < textures.count; ++idx) {
-      SDL_Texture *texture = textures.texture[idx];
-      SDL_Rect rect = thumbnail_rect(idx, screen, texture);
-      SDL_RenderCopy(renderer, texture, NULL, &rect);
-      if (idx == control.idx)
-        window_draw_control(rect);
-    }
-    if (preview) {
-      render_preview(control, screen, textures);
-    }
+
+    view_textures(textures, control, screen);
+    if (preview)
+      view_preview(control, screen, textures);
+
     SDL_RenderPresent(renderer);
   }
   textures_free(&textures);
