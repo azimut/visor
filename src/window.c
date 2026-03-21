@@ -44,10 +44,10 @@ void textures_add(Textures *textures, const char *imagepath) {
   textures->texture[textures->count++] = new_texture;
 }
 
-Textures textures_from_filepaths(const Filepaths filepaths) {
+Textures textures_from_filepaths(const Thumbnails filepaths) {
   Textures textures = textures_new();
   for (size_t i = 0; i < filepaths.count; ++i)
-    textures_add(&textures, filepaths.files[i].path);
+    textures_add(&textures, filepaths.arr[i].path);
   return textures;
 }
 
@@ -120,7 +120,7 @@ static void window_draw_control(SDL_Rect thumb_rect) {
 }
 
 // Returns the selected index, or -1
-int window_draw(const Filepaths filepaths) {
+int window_draw(const Thumbnails filepaths) {
   int selected_idx = -1;
   const int ncols = SDL_ceil(SDL_sqrt(filepaths.count));
   int nrows = SDL_ceil(SDL_sqrt(filepaths.count));

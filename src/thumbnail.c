@@ -2,14 +2,16 @@
 #include <unzip.h>
 #include <wand/MagickWand.h>
 
+#include "cache.h"
 #include "thumbnail.h"
 
+#define INIT_CAPACITY 10
 #define BUF_SIZE 8192
 #define IMG_SIZE 500
 
 MagickWand *magick_wand = NULL;
 
-int thumbnail_init(void) {
+static int thumbnail_init(void) {
   if (magick_wand) {
     fprintf(stderr, "[ERROR] Already created wand!\n");
     return 1;
@@ -24,7 +26,7 @@ int thumbnail_init(void) {
   return 0;
 }
 
-void thumbnail_free(void) {
+static void thumbnail_free(void) {
   if (!magick_wand)
     return;
   DestroyMagickWand(magick_wand);
@@ -141,12 +143,55 @@ static int thumbnail_create_epub(const char *input_epub,
   return -1;
 }
 
-int thumbnail_create(const Document input_file, const char *output_image) {
-  switch (input_file.format) {
+static int thumbnail_create(const Document document, const char *output_image) {
+  switch (document.format) {
   case FORMAT_PDF:
-    return thumbnail_create_pdf(input_file.path, output_image, 0);
+    return thumbnail_create_pdf(document.path, output_image, 0);
   case FORMAT_EPUB:
-    return thumbnail_create_epub(input_file.path, output_image);
+    return thumbnail_create_epub(document.path, output_image);
   }
   return -1;
+}
+
+static Thumbnail thumbnail_new(const Document document) {
+  cache_mkdir_p(document.path);
+  char *path = cache_image_filepath(document.path, ".jpg");
+  if (access(path, F_OK))
+    thumbnail_create(document, path);
+  return (Thumbnail){.path = path};
+}
+
+static Thumbnails thumbnails_new(void) {
+  return (Thumbnails){.arr = calloc(INIT_CAPACITY, sizeof(Thumbnail)),
+                      .capacity = INIT_CAPACITY};
+}
+
+static void thumbnails_add(Thumbnails *thumbs, Thumbnail thumb) {
+  if (thumbs->capacity == thumbs->count) {
+    thumbs->capacity += INIT_CAPACITY;
+    thumbs->arr =
+        reallocarray(thumbs->arr, thumbs->capacity, sizeof(Thumbnail));
+  }
+  thumbs->arr[thumbs->count].path = thumb.path;
+  thumbs->count++;
+}
+
+Thumbnails thumbnails_from_docs(const Documents docs) {
+  thumbnail_init();
+  Thumbnails thumbs = thumbnails_new();
+  for (size_t i = 0; i < docs.count; ++i) {
+    Document doc = docs.arr[i];
+    Thumbnail thumb = thumbnail_new(doc);
+    thumbnails_add(&thumbs, thumb);
+  }
+  thumbnail_free();
+  return thumbs;
+}
+
+void thumbails_free(Thumbnails *thumbs) {
+  for (size_t i = 0; i < thumbs->capacity; ++i) {
+    free(thumbs->arr[i].path);
+  }
+  free(thumbs->arr);
+  thumbs = NULL;
 }

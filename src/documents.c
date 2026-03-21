@@ -17,9 +17,13 @@ Document *document_new(const char *rawpath) {
   else
     return NULL;
 
+  char *path = realpath(rawpath, NULL);
+  if (!path)
+    return NULL;
+
   Document *document = calloc(1, sizeof(Document));
   document->format = format;
-  document->path = realpath(rawpath, NULL);
+  document->path = path;
   return document;
 }
 

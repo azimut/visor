@@ -3,8 +3,17 @@
 
 #include "documents.h"
 
-int thumbnail_init(void);
-void thumbnail_free(void);
-int thumbnail_create(const Document input_file, const char *output_image);
+typedef struct Thumbnail {
+  char *path;
+} Thumbnail;
+
+typedef struct Thumbnails {
+  Thumbnail *arr;
+  size_t capacity;
+  size_t count;
+} Thumbnails;
+
+Thumbnails thumbnails_from_docs(const Documents);
+void thumbails_free(Thumbnails *);
 
 #endif /* THUMBNAIL_H */

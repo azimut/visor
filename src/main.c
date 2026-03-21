@@ -1,5 +1,4 @@
 #include "cache.h"
-#include "filepaths.h"
 #include "thumbnail.h"
 #include "walktree.h"
 #include "window.h"
@@ -16,26 +15,13 @@ int main(void) {
   }
   printf("[INFO] %ld documents found!\n", documents.count);
 
-  if (thumbnail_init()) {
-    fprintf(stderr, "Failed to initialize MagickWand.\n");
-    return 1;
-  }
-  Filepaths thumbnails = filepaths_new();
-  for (size_t i = 0; i < documents.count; ++i) {
-    const char *document = documents.arr[i].path;
-    cache_mkdir_p(document);
-    char *thumbnail_path = cache_image_filepath(document, ".jpg");
-    filepaths_add(&thumbnails, thumbnail_path);
-    if (access(thumbnail_path, F_OK))
-      thumbnail_create(documents.arr[i], thumbnail_path);
-    free(thumbnail_path);
-  }
-  thumbnail_free();
+  Thumbnails thumbnails = thumbnails_from_docs(documents);
 
   if (window_init()) {
     fprintf(stderr, "Failed to init window.\n");
     return 1;
   }
+
   int selected_idx = window_draw(thumbnails);
   window_free();
 
@@ -46,5 +32,7 @@ int main(void) {
   }
 
   documents_free(&documents);
+  thumbails_free(&thumbnails);
+
   return 0;
 }

@@ -1,10 +1,10 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "filepaths.h"
+#include "thumbnail.h"
 
 int window_init(void);
 void window_free(void);
-int window_draw(Filepaths);
+int window_draw(Thumbnails);
 
 #endif /* WINDOW_H */
