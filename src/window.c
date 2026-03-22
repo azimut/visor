@@ -29,6 +29,12 @@ typedef struct Textures {
   size_t count;
 } Textures;
 
+typedef struct Model {
+  bool quit;
+  bool preview;
+  size_t selected_idx;
+} Model;
+
 Textures
 textures_new(void)
 {
@@ -160,6 +166,64 @@ view_textures(const Textures textures, const Screen screen)
   }
 }
 
+void
+update(Model *model, Control *control, const size_t total_size, const SDL_Event e)
+{
+  if (e.type == SDL_QUIT) {
+    model->quit = true;
+  }
+  if (e.type == SDL_KEYUP) {
+    switch (e.key.keysym.sym) {
+    case SDLK_i: {
+      model->preview = false;
+      break;
+    }
+    }
+  }
+  if (e.type == SDL_KEYDOWN) {
+    switch (e.key.keysym.sym) {
+    case SDLK_i: {
+      model->preview = true;
+      break;
+    }
+    case SDLK_ESCAPE:
+    case SDLK_q: {
+      model->quit = true;
+      break;
+    }
+    case SDLK_LEFT:
+    case SDLK_h: {
+      control_update(control, CONTROL_MOVE_LEFT, total_size);
+      break;
+    }
+    case SDLK_DOWN:
+    case SDLK_j: {
+      control_update(control, CONTROL_MOVE_DOWN, total_size);
+      break;
+    }
+    case SDLK_UP:
+    case SDLK_k: {
+      control_update(control, CONTROL_MOVE_UP, total_size);
+      break;
+    }
+    case SDLK_RIGHT:
+    case SDLK_l: {
+      control_update(control, CONTROL_MOVE_RIGHT, total_size);
+      break;
+    }
+    case SDLK_RETURN: {
+      if (control->idx > total_size - 1)
+        break;
+      model->selected_idx = control->idx;
+      model->quit = true;
+      break;
+    }
+    default:
+      break;
+    }
+  }
+}
+
 // Returns the selected index, or -1
 int
 window_draw(const Thumbnails filepaths)
@@ -183,70 +247,19 @@ window_draw(const Thumbnails filepaths)
   SDL_Log("screen.cols = %d   screen.rows = %d", screen.cols, screen.rows);
   SDL_Log("filepaths.count = %ld", filepaths.count);
   SDL_Log("textures.count = %ld", textures.count);
-  bool quit = false;
-  bool preview = false;
-  while (!quit) {
+  Model model = {0};
+  while (!model.quit) {
     SDL_Event e;
     SDL_WaitEvent(&e);
-    if (e.type == SDL_QUIT) {
-      quit = true;
-    }
-    if (e.type == SDL_KEYUP) {
-      switch (e.key.keysym.sym) {
-      case SDLK_i: {
-        preview = false;
-        break;
-      }
-      }
-    }
-    if (e.type == SDL_KEYDOWN) {
-      switch (e.key.keysym.sym) {
-      case SDLK_i: {
-        preview = true;
-        break;
-      }
-      case SDLK_ESCAPE:
-      case SDLK_q: {
-        quit = true;
-        break;
-      }
-      case SDLK_LEFT:
-      case SDLK_h: {
-        control_update(&control, CONTROL_MOVE_LEFT, filepaths.count);
-        break;
-      }
-      case SDLK_DOWN:
-      case SDLK_j: {
-        control_update(&control, CONTROL_MOVE_DOWN, filepaths.count);
-        break;
-      }
-      case SDLK_UP:
-      case SDLK_k: {
-        control_update(&control, CONTROL_MOVE_UP, filepaths.count);
-        break;
-      }
-      case SDLK_RIGHT:
-      case SDLK_l: {
-        control_update(&control, CONTROL_MOVE_RIGHT, filepaths.count);
-        break;
-      }
-      case SDLK_RETURN: {
-        if (control.idx > filepaths.count - 1)
-          break;
-        selected_idx = control.idx;
-        quit = true;
-        break;
-      }
-      default:
-        break;
-      }
-    }
+
+    update(&model, &control, filepaths.count, e);
+
     SDL_SetRenderDrawColor(renderer, 0x0A, 0x0A, 0x0A, 0xFF);
     SDL_RenderClear(renderer);
 
     view_textures(textures, screen);
     view_control(textures, screen, control);
-    if (preview)
+    if (model.preview)
       view_preview(textures, screen, control);
 
     SDL_RenderPresent(renderer);
