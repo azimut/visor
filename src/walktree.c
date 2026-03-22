@@ -14,9 +14,9 @@
 
 Documents pdfs = {0};
 
-static int callback(const char *filepath,
-                    __attribute__((unused)) const struct stat *sb, int tflag,
-                    struct FTW *ftwbuf) {
+static int
+callback(const char *filepath, __attribute__((unused)) const struct stat *sb,
+         tflag, struct FTW *ftwbuf) {
   const bool is_directory = tflag == FTW_D;
 
   if (is_directory && strcmp(filepath, ".")) {
@@ -40,7 +40,8 @@ static int callback(const char *filepath,
   return 0;
 }
 
-Documents find_documents(const unsigned int depth) {
+Documents
+find_documents(const unsigned int depth) {
   pdfs = documents_new();
   if (depth == 0) {
     DIR *dir = opendir(".");

@@ -10,7 +10,8 @@
 
 #define CACHE_ROOT "/.cache/visor"
 
-static void cache_mkdir(const char *dirpath) {
+static void
+cache_mkdir(const char *dirpath) {
   const char *homedir = getenv("HOME");
   char *buf = calloc(PATH_MAX, sizeof(char));
   strcat(buf, homedir);
@@ -24,7 +25,8 @@ static void cache_mkdir(const char *dirpath) {
   free(buf);
 }
 
-void cache_mkdir_p(const char *filepath) {
+void
+cache_mkdir_p(const char *filepath) {
   char *buf = strdup(filepath);
   char *current = buf;
   char *slash;
@@ -37,7 +39,8 @@ void cache_mkdir_p(const char *filepath) {
   free(buf);
 }
 
-char *cache_image_filepath(const char *filepath, const char *extension) {
+char *
+cache_image_filepath(const char *filepath, const char *extension) {
   const char *homedir = getenv("HOME");
   char *buf = calloc(PATH_MAX, sizeof(char));
   strcat(buf, homedir);

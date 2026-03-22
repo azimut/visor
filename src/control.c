@@ -1,11 +1,13 @@
 #include "control.h"
 
-Control control_new(const int ncols, const int nrows) {
+Control
+control_new(const int ncols, const int nrows) {
   return (Control){.ncols = ncols, .nrows = nrows};
 }
 
-void control_update(Control *control, const Control_Move movement,
-                    const size_t total_size) {
+void
+control_update(Control *control, const Control_Move movement,
+               const size_t total_size) {
   int new_xpos = control->xpos;
   int new_ypos = control->ypos;
   switch (movement) {

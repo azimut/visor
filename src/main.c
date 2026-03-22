@@ -1,4 +1,3 @@
-#include "cache.h"
 #include "thumbnail.h"
 #include "walktree.h"
 #include "window.h"
@@ -6,7 +5,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int main(void) {
+int
+main(void) {
 
   Documents documents = find_documents(0);
   if (documents.count == 0) {

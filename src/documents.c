@@ -4,7 +4,8 @@
 
 #define INIT_CAPACITY 10
 
-Document *document_new(const char *rawpath) {
+Document *
+document_new(const char *rawpath) {
   const char *extension = strrchr(rawpath, '.');
   if (!extension)
     return NULL;
@@ -31,18 +32,21 @@ Document *document_new(const char *rawpath) {
   return document;
 }
 
-void document_free(Document *doc) {
+void
+document_free(Document *doc) {
   free(doc->path);
   free(doc);
   doc = NULL;
 }
 
-Documents documents_new(void) {
+Documents
+documents_new(void) {
   return (Documents){.arr = calloc(INIT_CAPACITY, sizeof(Document)),
                      .capacity = INIT_CAPACITY};
 }
 
-void documents_add(Documents *docs, const Document doc) {
+void
+documents_add(Documents *docs, const Document doc) {
   if (docs->capacity == docs->count) {
     docs->capacity += INIT_CAPACITY;
     docs->arr = reallocarray(docs->arr, docs->capacity, sizeof(Document));
@@ -52,7 +56,8 @@ void documents_add(Documents *docs, const Document doc) {
   docs->count++;
 }
 
-void documents_free(Documents *docs) {
+void
+documents_free(Documents *docs) {
   for (size_t i = 0; i < docs->capacity; ++i) {
     free(docs->arr[i].path);
   }
