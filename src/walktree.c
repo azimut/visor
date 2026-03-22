@@ -15,8 +15,7 @@
 Documents pdfs = {0};
 
 static int
-callback(const char *filepath, __attribute__((unused)) const struct stat *sb,
-         tflag, struct FTW *ftwbuf) {
+callback(const char *filepath, __attribute__((unused)) const struct stat *sb, int tflag, struct FTW *ftwbuf) {
   const bool is_directory = tflag == FTW_D;
 
   if (is_directory && strcmp(filepath, ".")) {

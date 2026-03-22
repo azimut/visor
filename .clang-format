@@ -1,1 +1,4 @@
 AlwaysBreakAfterDefinitionReturnType: TopLevel
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 0

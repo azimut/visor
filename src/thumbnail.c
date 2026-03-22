@@ -37,8 +37,7 @@ thumbnail_free(void) {
 }
 
 static int
-thumbnail_create_pdf(const char *input_pdf, const char *output_image,
-                     unsigned int page_number) {
+thumbnail_create_pdf(const char *input_pdf, const char *output_image, unsigned int page_number) {
   printf("[INFO] Converting page %d of %s ... ", page_number, input_pdf);
   fflush(stdout);
   MagickBooleanType status;
@@ -54,8 +53,7 @@ thumbnail_create_pdf(const char *input_pdf, const char *output_image,
   status = MagickReadImage(magick_wand, filename_with_page);
 
   if (status == MagickFalse) {
-    fprintf(stderr, "[ERROR] Failed to read image from PDF page %d\n",
-            page_number);
+    fprintf(stderr, "[ERROR] Failed to read image from PDF page %d\n", page_number);
     // Error handling code here to get the exception description if needed
     DestroyMagickWand(magick_wand);
     MagickWandTerminus();
@@ -111,8 +109,7 @@ thumbnail_create_epub(const char *input_epub, const char *output_image) {
     char filename[256];
     unz_file_info info;
 
-    if (unzGetCurrentFileInfo(zip, &info, filename, sizeof(filename), NULL, 0,
-                              NULL, 0) != UNZ_OK)
+    if (unzGetCurrentFileInfo(zip, &info, filename, sizeof(filename), NULL, 0, NULL, 0) != UNZ_OK)
       break;
 
     if (strstr(filename, "cover") &&

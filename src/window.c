@@ -115,8 +115,7 @@ thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture) {
 }
 
 static void
-view_preview(const Control control, const Screen screen,
-             const Textures textures) {
+view_preview(const Control control, const Screen screen, const Textures textures) {
   SDL_Texture *tex = textures.texture[control.idx];
   const SDL_Point tex_size = texture_size(tex);
   const int x = (screen.width / 2.0) - (tex_size.x / 2.0);
@@ -139,7 +138,8 @@ view_control(SDL_Rect thumb_rect) {
 }
 
 static void
-view_textures(const Textures textures, const Control control,
+view_textures(const Textures textures,
+              const Control control,
               const Screen screen) {
   SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
   for (size_t idx = 0; idx < textures.count; ++idx) {
