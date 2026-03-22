@@ -167,21 +167,21 @@ view_textures(const Textures textures, const Screen screen)
 }
 
 void
-update(Model *model, Control *control, const size_t total_size, const SDL_Event e)
+update(Model *model, Control *control, const size_t total_size, const SDL_Event event)
 {
-  if (e.type == SDL_QUIT) {
+  if (event.type == SDL_QUIT) {
     model->quit = true;
   }
-  if (e.type == SDL_KEYUP) {
-    switch (e.key.keysym.sym) {
+  if (event.type == SDL_KEYUP) {
+    switch (event.key.keysym.sym) {
     case SDLK_i: {
       model->preview = false;
       break;
     }
     }
   }
-  if (e.type == SDL_KEYDOWN) {
-    switch (e.key.keysym.sym) {
+  if (event.type == SDL_KEYDOWN) {
+    switch (event.key.keysym.sym) {
     case SDLK_i: {
       model->preview = true;
       break;
@@ -228,7 +228,6 @@ update(Model *model, Control *control, const size_t total_size, const SDL_Event 
 int
 window_draw(const Thumbnails filepaths)
 {
-  int selected_idx = -1;
   const int ncols = SDL_ceil(SDL_sqrt(filepaths.count));
   int nrows = SDL_ceil(SDL_sqrt(filepaths.count));
   if ((ncols * (nrows - 1)) >= filepaths.count) {
@@ -247,7 +246,7 @@ window_draw(const Thumbnails filepaths)
   SDL_Log("screen.cols = %d   screen.rows = %d", screen.cols, screen.rows);
   SDL_Log("filepaths.count = %ld", filepaths.count);
   SDL_Log("textures.count = %ld", textures.count);
-  Model model = {0};
+  Model model = {.selected_idx = -1};
   while (!model.quit) {
     SDL_Event e;
     SDL_WaitEvent(&e);
@@ -265,7 +264,7 @@ window_draw(const Thumbnails filepaths)
     SDL_RenderPresent(renderer);
   }
   textures_free(&textures);
-  return selected_idx;
+  return model.selected_idx;
 }
 
 void
