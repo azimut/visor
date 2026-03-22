@@ -1,4 +1,5 @@
 AlwaysBreakAfterDefinitionReturnType: TopLevel
 BinPackArguments: false
 BinPackParameters: false
+BreakBeforeBraces: WebKit
 ColumnLimit: 0

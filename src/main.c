@@ -6,8 +6,8 @@
 #include <unistd.h>
 
 int
-main(void) {
-
+main(void)
+{
   Documents documents = find_documents(0);
   if (documents.count == 0) {
     fprintf(stderr, "No documents found in directory :/\n");

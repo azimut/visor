@@ -30,13 +30,15 @@ typedef struct Textures {
 } Textures;
 
 Textures
-textures_new(void) {
+textures_new(void)
+{
   SDL_Texture **texture = calloc(INIT_CAPACITY, sizeof(void *));
   return (Textures){.capacity = INIT_CAPACITY, .texture = texture};
 }
 
 void
-textures_add(Textures *textures, const char *imagepath) {
+textures_add(Textures *textures, const char *imagepath)
+{
   if (textures->capacity == textures->count) {
     textures->capacity += INIT_CAPACITY;
     textures->texture =
@@ -47,7 +49,8 @@ textures_add(Textures *textures, const char *imagepath) {
 }
 
 Textures
-textures_from_documents(const Thumbnails filepaths) {
+textures_from_documents(const Thumbnails filepaths)
+{
   Textures textures = textures_new();
   for (size_t i = 0; i < filepaths.count; ++i)
     textures_add(&textures, filepaths.arr[i].path);
@@ -55,7 +58,8 @@ textures_from_documents(const Thumbnails filepaths) {
 }
 
 void
-textures_free(Textures *textures) {
+textures_free(Textures *textures)
+{
   for (size_t i = 0; i < textures->count; ++i)
     SDL_DestroyTexture(textures->texture[i]);
   free(textures->texture);
@@ -64,7 +68,8 @@ textures_free(Textures *textures) {
 }
 
 int
-window_init(void) {
+window_init(void)
+{
   if (SDL_Init(SDL_INIT_VIDEO)) {
     SDL_LogError(SDL_LOG_PRIORITY_ERROR, "Starting SDL...");
     return 1;
@@ -84,14 +89,16 @@ window_init(void) {
 }
 
 static SDL_Point
-texture_size(SDL_Texture *texture) {
+texture_size(SDL_Texture *texture)
+{
   SDL_Point size;
   SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
   return size;
 }
 
 static SDL_Point
-thumbnail_size(SDL_Texture *texture, const Screen screen) {
+thumbnail_size(SDL_Texture *texture, const Screen screen)
+{
   SDL_Point result;
   const SDL_Point texsize = texture_size(texture);
   const double height = (double)screen.cellheight / THUMB_ASPECT;
@@ -102,7 +109,8 @@ thumbnail_size(SDL_Texture *texture, const Screen screen) {
 }
 
 static SDL_Rect
-thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture) {
+thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture)
+{
   const SDL_Point thumbsize = thumbnail_size(texture, screen);
   const double xcoord = SDL_fmod(idx, screen.cols);
   const double ycoord = SDL_floor((double)idx / screen.cols);
@@ -115,7 +123,8 @@ thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture) {
 }
 
 static void
-view_preview(const Control control, const Screen screen, const Textures textures) {
+view_preview(const Control control, const Screen screen, const Textures textures)
+{
   SDL_Texture *tex = textures.texture[control.idx];
   const SDL_Point tex_size = texture_size(tex);
   const int x = (screen.width / 2.0) - (tex_size.x / 2.0);
@@ -125,7 +134,8 @@ view_preview(const Control control, const Screen screen, const Textures textures
 }
 
 static void
-view_control(SDL_Rect thumb_rect) {
+view_control(SDL_Rect thumb_rect)
+{
   const int r = 0, g = 255, b = 0;
   const int tlx = thumb_rect.x;
   const int tly = thumb_rect.y;
@@ -140,7 +150,8 @@ view_control(SDL_Rect thumb_rect) {
 static void
 view_textures(const Textures textures,
               const Control control,
-              const Screen screen) {
+              const Screen screen)
+{
   SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
   for (size_t idx = 0; idx < textures.count; ++idx) {
     SDL_Texture *texture = textures.texture[idx];
@@ -153,7 +164,8 @@ view_textures(const Textures textures,
 
 // Returns the selected index, or -1
 int
-window_draw(const Thumbnails filepaths) {
+window_draw(const Thumbnails filepaths)
+{
   int selected_idx = -1;
   const int ncols = SDL_ceil(SDL_sqrt(filepaths.count));
   int nrows = SDL_ceil(SDL_sqrt(filepaths.count));
@@ -245,7 +257,8 @@ window_draw(const Thumbnails filepaths) {
 }
 
 void
-window_free(void) {
+window_free(void)
+{
   if (!window)
     return;
   SDL_DestroyRenderer(renderer);

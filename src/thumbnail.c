@@ -12,7 +12,8 @@
 MagickWand *magick_wand = NULL;
 
 static int
-thumbnail_init(void) {
+thumbnail_init(void)
+{
   if (magick_wand) {
     fprintf(stderr, "[ERROR] Already created wand!\n");
     return 1;
@@ -28,7 +29,8 @@ thumbnail_init(void) {
 }
 
 static void
-thumbnail_free(void) {
+thumbnail_free(void)
+{
   if (!magick_wand)
     return;
   DestroyMagickWand(magick_wand);
@@ -37,7 +39,8 @@ thumbnail_free(void) {
 }
 
 static int
-thumbnail_create_pdf(const char *input_pdf, const char *output_image, unsigned int page_number) {
+thumbnail_create_pdf(const char *input_pdf, const char *output_image, unsigned int page_number)
+{
   printf("[INFO] Converting page %d of %s ... ", page_number, input_pdf);
   fflush(stdout);
   MagickBooleanType status;
@@ -93,7 +96,8 @@ thumbnail_create_pdf(const char *input_pdf, const char *output_image, unsigned i
 }
 
 static int
-thumbnail_create_epub(const char *input_epub, const char *output_image) {
+thumbnail_create_epub(const char *input_epub, const char *output_image)
+{
   unzFile zip = unzOpen(input_epub);
   if (!zip) {
     fprintf(stderr, "Cannot open epub: %s", input_epub);
@@ -144,7 +148,8 @@ thumbnail_create_epub(const char *input_epub, const char *output_image) {
 }
 
 static int
-thumbnail_create(const Document document, const char *output_image) {
+thumbnail_create(const Document document, const char *output_image)
+{
   switch (document.format) {
   case FORMAT_DOC:
   case FORMAT_PPT:
@@ -157,7 +162,8 @@ thumbnail_create(const Document document, const char *output_image) {
 }
 
 static Thumbnail
-thumbnail_new(const Document document) {
+thumbnail_new(const Document document)
+{
   cache_mkdir_p(document.path);
   char *path = cache_image_filepath(document.path, ".jpg");
   if (access(path, F_OK))
@@ -166,13 +172,15 @@ thumbnail_new(const Document document) {
 }
 
 static Thumbnails
-thumbnails_new(void) {
+thumbnails_new(void)
+{
   return (Thumbnails){.arr = calloc(INIT_CAPACITY, sizeof(Thumbnail)),
                       .capacity = INIT_CAPACITY};
 }
 
 static void
-thumbnails_add(Thumbnails *thumbs, const Thumbnail thumb) {
+thumbnails_add(Thumbnails *thumbs, const Thumbnail thumb)
+{
   if (thumbs->capacity == thumbs->count) {
     thumbs->capacity += INIT_CAPACITY;
     thumbs->arr =
@@ -183,7 +191,8 @@ thumbnails_add(Thumbnails *thumbs, const Thumbnail thumb) {
 }
 
 Thumbnails
-thumbnails_from_docs(const Documents docs) {
+thumbnails_from_docs(const Documents docs)
+{
   thumbnail_init();
   Thumbnails thumbs = thumbnails_new();
   for (size_t i = 0; i < docs.count; ++i) {
@@ -196,7 +205,8 @@ thumbnails_from_docs(const Documents docs) {
 }
 
 void
-thumbnails_free(Thumbnails *thumbs) {
+thumbnails_free(Thumbnails *thumbs)
+{
   free(thumbs->arr);
   thumbs = NULL;
 }
