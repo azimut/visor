@@ -123,7 +123,7 @@ thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture)
 }
 
 static void
-view_preview(const Control control, const Screen screen, const Textures textures)
+view_preview(const Textures textures, const Screen screen, const Control control)
 {
   SDL_Texture *tex = textures.texture[control.idx];
   const SDL_Point tex_size = texture_size(tex);
@@ -134,13 +134,16 @@ view_preview(const Control control, const Screen screen, const Textures textures
 }
 
 static void
-view_control(SDL_Rect thumb_rect)
+view_control(const Textures textures, const Screen screen, const Control control)
 {
+  SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
+  SDL_Texture *texture = textures.texture[control.idx];
+  const SDL_Rect rect = thumbnail_rect(control.idx, screen, texture);
   const int r = 0, g = 255, b = 0;
-  const int tlx = thumb_rect.x;
-  const int tly = thumb_rect.y;
-  const int trx = tlx + thumb_rect.w;
-  const int bry = thumb_rect.y + thumb_rect.h;
+  const int tlx = rect.x;
+  const int tly = rect.y;
+  const int trx = tlx + rect.w;
+  const int bry = rect.y + rect.h;
   thickLineRGBA(renderer, tlx - 3, tly, trx + 3, tly, BORDER, r, g, b, 255);
   thickLineRGBA(renderer, trx, tly, trx, bry, BORDER, r, g, b, 255);
   thickLineRGBA(renderer, trx + 3, bry, tlx - 3, bry, BORDER, r, g, b, 255);
@@ -148,17 +151,12 @@ view_control(SDL_Rect thumb_rect)
 }
 
 static void
-view_textures(const Textures textures,
-              const Control control,
-              const Screen screen)
+view_textures(const Textures textures, const Screen screen)
 {
-  SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
   for (size_t idx = 0; idx < textures.count; ++idx) {
     SDL_Texture *texture = textures.texture[idx];
     SDL_Rect rect = thumbnail_rect(idx, screen, texture);
     SDL_RenderCopy(renderer, texture, NULL, &rect);
-    if (idx == control.idx)
-      view_control(rect);
   }
 }
 
@@ -246,9 +244,10 @@ window_draw(const Thumbnails filepaths)
     SDL_SetRenderDrawColor(renderer, 0x0A, 0x0A, 0x0A, 0xFF);
     SDL_RenderClear(renderer);
 
-    view_textures(textures, control, screen);
+    view_textures(textures, screen);
+    view_control(textures, screen, control);
     if (preview)
-      view_preview(control, screen, textures);
+      view_preview(textures, screen, control);
 
     SDL_RenderPresent(renderer);
   }
