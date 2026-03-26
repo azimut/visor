@@ -11,7 +11,7 @@
 #define TITLE "visor"
 #define WIDTH 640
 #define HEIGHT 480
-#define FONTPATH "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+#define FONTPATH "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf"
 #define FONTSIZE 35
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
@@ -27,8 +27,13 @@ typedef struct Screen {
   const int cellwidth, cellheight;
 } Screen;
 
+typedef struct Texture {
+  SDL_Texture *tex;
+  int width, height;
+} Texture;
+
 typedef struct Textures {
-  SDL_Texture **texture;
+  Texture *arr;
   size_t capacity;
   size_t count;
 } Textures;
@@ -71,8 +76,8 @@ model_free(Model *model)
 Textures
 textures_new(void)
 {
-  SDL_Texture **texture = calloc(INIT_CAPACITY, sizeof(void *));
-  return (Textures){.capacity = INIT_CAPACITY, .texture = texture};
+  Texture *texture = calloc(INIT_CAPACITY, sizeof(Texture));
+  return (Textures){.capacity = INIT_CAPACITY, .arr = texture};
 }
 
 void
@@ -80,11 +85,17 @@ textures_add(Textures *textures, const char *imagepath)
 {
   if (textures->capacity == textures->count) {
     textures->capacity += INIT_CAPACITY;
-    textures->texture =
-        reallocarray(textures->texture, textures->capacity, sizeof(void *));
+    textures->arr =
+        reallocarray(textures->arr, textures->capacity, sizeof(Texture));
   }
-  SDL_Texture *new_texture = IMG_LoadTexture(renderer, imagepath);
-  textures->texture[textures->count++] = new_texture;
+  const size_t idx = textures->count;
+  textures->arr[idx].tex = IMG_LoadTexture(renderer, imagepath);
+  SDL_QueryTexture(textures->arr[idx].tex,
+                   NULL,
+                   NULL,
+                   &textures->arr[idx].width,
+                   &textures->arr[idx].height);
+  textures->count++;
 }
 
 Textures
@@ -100,8 +111,8 @@ void
 textures_free(Textures *textures)
 {
   for (size_t i = 0; i < textures->count; ++i)
-    SDL_DestroyTexture(textures->texture[i]);
-  free(textures->texture);
+    SDL_DestroyTexture(textures->arr[i].tex);
+  free(textures->arr);
   textures->capacity = 0;
   textures->count = 0;
 }
@@ -128,27 +139,18 @@ window_init(void)
 }
 
 static SDL_Point
-texture_size(SDL_Texture *texture)
-{
-  SDL_Point size;
-  SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
-  return size;
-}
-
-static SDL_Point
-thumbnail_size(SDL_Texture *texture, const Screen screen)
+thumbnail_size(const Texture texture, const Screen screen)
 {
   SDL_Point result;
-  const SDL_Point texsize = texture_size(texture);
   const double height = (double)screen.cellheight / THUMB_ASPECT;
-  const double aspect = ((double)texsize.x / texsize.y);
+  const double aspect = ((double)texture.width / texture.height);
   result.x = height * aspect;
   result.y = height;
   return result;
 }
 
 static SDL_Rect
-thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture)
+thumbnail_rect(const size_t idx, const Screen screen, const Texture texture)
 {
   const SDL_Point thumbsize = thumbnail_size(texture, screen);
   const double xcoord = SDL_fmod(idx, screen.cols);
@@ -168,13 +170,14 @@ view_preview(const Textures textures, const Screen screen, const Control control
   boxRGBA(renderer, 0, 0, screen.width, screen.height, 15, 15, 15, 220);
 
   // Thumb
-  SDL_Texture *tex = textures.texture[control.idx];
-  const SDL_Point tex_size = texture_size(tex);
+  SDL_Texture *tex = textures.arr[control.idx].tex;
+  const int twidth = textures.arr[control.idx].width;
+  const int theight = textures.arr[control.idx].height;
   const SDL_Rect rect = {
-      .x = (screen.width / 2.0) - (tex_size.x / 2.0),
-      .y = (screen.height / 2.0) - (tex_size.y / 2.0),
-      .w = tex_size.x,
-      .h = tex_size.y};
+      .x = (screen.width / 2.0) - (twidth / 2.0),
+      .y = (screen.height / 2.0) - (theight / 2.0),
+      .w = twidth,
+      .h = theight};
   SDL_RenderCopy(renderer, tex, NULL, &rect);
 
   // Text
@@ -190,7 +193,7 @@ static void
 view_control(const Textures textures, const Screen screen, const Control control)
 {
   SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
-  SDL_Texture *texture = textures.texture[control.idx];
+  const Texture texture = textures.arr[control.idx];
   const SDL_Rect rect = thumbnail_rect(control.idx, screen, texture);
   const int r = 0, g = 255, b = 0;
   const int tlx = rect.x;
@@ -207,9 +210,9 @@ static void
 view_textures(const Textures textures, const Screen screen)
 {
   for (size_t idx = 0; idx < textures.count; ++idx) {
-    SDL_Texture *texture = textures.texture[idx];
+    Texture texture = textures.arr[idx];
     SDL_Rect rect = thumbnail_rect(idx, screen, texture);
-    SDL_RenderCopy(renderer, texture, NULL, &rect);
+    SDL_RenderCopy(renderer, texture.tex, NULL, &rect);
   }
 }
 
