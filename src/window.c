@@ -11,8 +11,8 @@
 #define TITLE "visor"
 #define WIDTH 640
 #define HEIGHT 480
-#define FONTPATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
-#define FONTSIZE 25
+#define FONTPATH "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+#define FONTSIZE 35
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
 #define BORDER 7
@@ -64,6 +64,7 @@ model_new(const Documents documents)
 static void
 model_free(Model *model)
 {
+  TTF_CloseFont(model->font.ttf);
   TTF_Quit();
 }
 
@@ -163,20 +164,25 @@ thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture)
 static void
 view_preview(const Textures textures, const Screen screen, const Control control, const Model model)
 {
+  // Fog
+  boxRGBA(renderer, 0, 0, screen.width, screen.height, 15, 15, 15, 220);
+
+  // Thumb
   SDL_Texture *tex = textures.texture[control.idx];
   const SDL_Point tex_size = texture_size(tex);
-  const int x = (screen.width / 2.0) - (tex_size.x / 2.0);
-  const int y = (screen.height / 2.0) - (tex_size.y / 2.0);
-  const SDL_Rect rect = {.x = x, .y = y, .w = tex_size.x, .h = tex_size.y};
+  const SDL_Rect rect = {
+      .x = (screen.width / 2.0) - (tex_size.x / 2.0),
+      .y = (screen.height / 2.0) - (tex_size.y / 2.0),
+      .w = tex_size.x,
+      .h = tex_size.y};
   SDL_RenderCopy(renderer, tex, NULL, &rect);
 
-  SDL_Rect brect = {};
-  SDL_RenderDrawRect(renderer, &brect);
-  SDL_Rect trect = {
+  // Text
+  const SDL_Rect trect = {
       .w = model.font.width,
       .h = model.font.height,
-      .y = screen.height - model.font.height,
-  };
+      .x = (screen.width / 2.0) - (model.font.width / 2.0),
+      .y = screen.height - model.font.height * 4};
   SDL_RenderCopy(renderer, model.font.texture, NULL, &trect);
 }
 
@@ -215,11 +221,9 @@ update_preview(Model *model, const Control control)
   }
   const char *filename = model->docs.arr[control.idx].filename;
   model->font.surface =
-      TTF_RenderText_Solid(model->font.ttf,
-                           filename,
-                           model->font.color);
+      TTF_RenderUTF8_Solid(model->font.ttf, filename, model->font.color);
   model->font.texture = SDL_CreateTextureFromSurface(renderer, model->font.surface);
-  TTF_SizeText(model->font.ttf, filename, &model->font.width, &model->font.height);
+  TTF_SizeUTF8(model->font.ttf, filename, &model->font.width, &model->font.height);
 }
 
 void
