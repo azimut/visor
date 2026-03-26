@@ -1,6 +1,8 @@
 # visor
 
-A poor's man file explorer. But only for pdf documents. Keyboard centric. NOT a pdf reader, just a file explorer and launcher.
+A poor's man file explorer. But only for pdf (and similar) documents. Keyboard centric. NOT a pdf reader, just a file explorer and launcher.
+
+![preview](./media/visor.jpg)
 
 ## raison d'etre
 
