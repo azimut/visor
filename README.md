@@ -19,6 +19,7 @@ A poor's man file explorer. But only for pdf documents. Keyboard centric. NOT a 
 - SDL2
 - SDL2_gfx
 - SDL2_image
+- SDL2_ttf
 - MagickWand
 - minizip
 
