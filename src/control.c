@@ -3,7 +3,7 @@
 Control
 control_new(const int ncols, const int nrows)
 {
-  return (Control){.ncols = ncols, .nrows = nrows};
+  return (Control){.ncols = ncols, .nrows = nrows, .idx = 0, .prev_idx = 1};
 }
 
 void
@@ -43,6 +43,7 @@ control_update(Control *control, const Control_Move movement, const size_t total
   }
   const size_t new_idx = new_ypos * control->ncols + new_xpos;
   const size_t max_idx = total_size - 1;
+  control->prev_idx = control->idx;
   if (new_idx > max_idx) {
     control->idx = max_idx;
     control->xpos = SDL_fmod(max_idx, control->ncols);

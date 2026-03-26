@@ -2,13 +2,17 @@
 #include "SDL.h"
 #include "SDL2_gfxPrimitives.h"
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include "control.h"
 
+#include <SDL_assert.h>
 #include <stdbool.h>
 
 #define TITLE "visor"
 #define WIDTH 640
 #define HEIGHT 480
+#define FONTPATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
+#define FONTSIZE 25
 #define POS SDL_WINDOWPOS_UNDEFINED
 #define INIT_CAPACITY 10
 #define BORDER 7
@@ -29,11 +33,39 @@ typedef struct Textures {
   size_t count;
 } Textures;
 
+typedef struct Font {
+  TTF_Font *ttf;
+  SDL_Surface *surface;
+  SDL_Texture *texture;
+  SDL_Color color;
+  int width, height;
+} Font;
+
 typedef struct Model {
+  Font font;
+  const Documents docs;
   bool quit;
   bool preview;
   size_t selected_idx;
 } Model;
+
+static Model
+model_new(const Documents documents)
+{
+  TTF_Init();
+  TTF_Font *font = TTF_OpenFont(FONTPATH, FONTSIZE);
+  SDL_assert(font);
+  return (Model){
+      .selected_idx = -1,
+      .docs = documents,
+      .font = {.ttf = font, .color = {255, 255, 255, 0}}};
+}
+
+static void
+model_free(Model *model)
+{
+  TTF_Quit();
+}
 
 Textures
 textures_new(void)
@@ -129,7 +161,7 @@ thumbnail_rect(const size_t idx, const Screen screen, SDL_Texture *texture)
 }
 
 static void
-view_preview(const Textures textures, const Screen screen, const Control control)
+view_preview(const Textures textures, const Screen screen, const Control control, const Model model)
 {
   SDL_Texture *tex = textures.texture[control.idx];
   const SDL_Point tex_size = texture_size(tex);
@@ -137,6 +169,15 @@ view_preview(const Textures textures, const Screen screen, const Control control
   const int y = (screen.height / 2.0) - (tex_size.y / 2.0);
   const SDL_Rect rect = {.x = x, .y = y, .w = tex_size.x, .h = tex_size.y};
   SDL_RenderCopy(renderer, tex, NULL, &rect);
+
+  SDL_Rect brect = {};
+  SDL_RenderDrawRect(renderer, &brect);
+  SDL_Rect trect = {
+      .w = model.font.width,
+      .h = model.font.height,
+      .y = screen.height - model.font.height,
+  };
+  SDL_RenderCopy(renderer, model.font.texture, NULL, &trect);
 }
 
 static void
@@ -166,6 +207,21 @@ view_textures(const Textures textures, const Screen screen)
   }
 }
 
+static void
+update_preview(Model *model, const Control control)
+{
+  if (control.prev_idx == control.idx) {
+    return;
+  }
+  const char *filename = model->docs.arr[control.idx].filename;
+  model->font.surface =
+      TTF_RenderText_Solid(model->font.ttf,
+                           filename,
+                           model->font.color);
+  model->font.texture = SDL_CreateTextureFromSurface(renderer, model->font.surface);
+  TTF_SizeText(model->font.ttf, filename, &model->font.width, &model->font.height);
+}
+
 void
 update(Model *model, Control *control, const size_t total_size, const SDL_Event event)
 {
@@ -176,6 +232,10 @@ update(Model *model, Control *control, const size_t total_size, const SDL_Event 
     switch (event.key.keysym.sym) {
     case SDLK_i: {
       model->preview = false;
+      SDL_FreeSurface(model->font.surface);
+      SDL_DestroyTexture(model->font.texture);
+      model->font.surface = NULL;
+      model->font.texture = NULL;
       break;
     }
     }
@@ -222,15 +282,16 @@ update(Model *model, Control *control, const size_t total_size, const SDL_Event 
       break;
     }
   }
+  update_preview(model, *control);
 }
 
 // Returns the selected index, or -1
 int
-window_draw(const Thumbnails filepaths)
+window_draw(const Documents documents, const Thumbnails thumbnails)
 {
-  const int ncols = SDL_ceil(SDL_sqrt(filepaths.count));
-  int nrows = SDL_ceil(SDL_sqrt(filepaths.count));
-  if ((ncols * (nrows - 1)) >= filepaths.count) {
+  const int ncols = SDL_ceil(SDL_sqrt(thumbnails.count));
+  int nrows = SDL_ceil(SDL_sqrt(thumbnails.count));
+  if ((ncols * (nrows - 1)) >= thumbnails.count) {
     nrows--;
   }
   SDL_Rect dims;
@@ -242,16 +303,16 @@ window_draw(const Thumbnails filepaths)
                                  .cellwidth = dims.w / ncols,
                                  .cellheight = dims.h / nrows};
   Control control = control_new(screen.cols, screen.rows);
-  Textures textures = textures_from_documents(filepaths);
+  Textures textures = textures_from_documents(thumbnails);
   SDL_Log("screen.cols = %d   screen.rows = %d", screen.cols, screen.rows);
-  SDL_Log("filepaths.count = %ld", filepaths.count);
+  SDL_Log("filepaths.count = %ld", thumbnails.count);
   SDL_Log("textures.count = %ld", textures.count);
-  Model model = {.selected_idx = -1};
+  Model model = model_new(documents);
   while (!model.quit) {
     SDL_Event e;
     SDL_WaitEvent(&e);
 
-    update(&model, &control, filepaths.count, e);
+    update(&model, &control, thumbnails.count, e);
 
     SDL_SetRenderDrawColor(renderer, 0x0A, 0x0A, 0x0A, 0xFF);
     SDL_RenderClear(renderer);
@@ -259,11 +320,12 @@ window_draw(const Thumbnails filepaths)
     view_textures(textures, screen);
     view_control(textures, screen, control);
     if (model.preview)
-      view_preview(textures, screen, control);
+      view_preview(textures, screen, control, model);
 
     SDL_RenderPresent(renderer);
   }
   textures_free(&textures);
+  model_free(&model);
   return model.selected_idx;
 }
 

@@ -7,6 +7,7 @@ typedef struct Control {
   int xpos, ypos;
   const int ncols, nrows;
   size_t idx;
+  size_t prev_idx;
 } Control;
 
 typedef enum {

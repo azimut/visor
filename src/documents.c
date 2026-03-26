@@ -1,5 +1,6 @@
 #include "documents.h"
 
+#include <libgen.h>
 #include <string.h>
 
 #define INIT_CAPACITY 10
@@ -30,6 +31,11 @@ document_new(const char *rawpath)
   Document *document = calloc(1, sizeof(Document));
   document->format = format;
   document->path = path;
+
+  char *tmp = strdup(path);
+  document->filename = strdup(basename(tmp));
+  free(tmp);
+
   return document;
 }
 
@@ -57,6 +63,7 @@ documents_add(Documents *docs, const Document doc)
   }
   docs->arr[docs->count].format = doc.format;
   docs->arr[docs->count].path = strdup(doc.path);
+  docs->arr[docs->count].filename = strdup(doc.filename);
   docs->count++;
 }
 

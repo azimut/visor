@@ -21,7 +21,7 @@ main(void)
     fprintf(stderr, "Failed to init window.\n");
     return 1;
   }
-  const int selected_idx = window_draw(thumbnails);
+  const int selected_idx = window_draw(documents, thumbnails);
   window_free();
 
   if (selected_idx >= 0) {

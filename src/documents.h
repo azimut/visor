@@ -12,6 +12,7 @@ typedef enum {
 
 typedef struct Document {
   char *path;
+  char *filename;
   Format format;
 } Document;
 

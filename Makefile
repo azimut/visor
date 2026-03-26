@@ -1,4 +1,4 @@
-PKGS    := MagickWand SDL2_image SDL2_gfx minizip
+PKGS    := MagickWand SDL2_image SDL2_gfx SDL2_ttf minizip
 CFLAGS  := -Wall -Wextra -pedantic
 CFLAGS  += $(shell pkg-config --cflags $(PKGS))
 LDFLAGS := $(shell pkg-config --libs   $(PKGS))
@@ -18,4 +18,4 @@ install: main
 	cp main $(HOME)/bin/visor
 
 .PHONY: deps
-deps:; sudo apt install libsdl2-gfx-dev libsdl2-image-dev libmagickwand-dev libminizip-dev
+deps:; sudo apt install libsdl2-ttf-dev libsdl2-gfx-dev libsdl2-image-dev libmagickwand-dev libminizip-dev
