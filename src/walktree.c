@@ -48,7 +48,11 @@ find_documents(const unsigned int depth)
     DIR *dir = opendir(".");
     struct dirent *current;
     while ((current = readdir(dir))) {
-      if (current->d_type != DT_REG) {
+      if (!(current->d_type == DT_REG || current->d_type == DT_LNK)) {
+        continue;
+      }
+      struct stat st_target;
+      if (stat(current->d_name, &st_target) == -1) {
         continue;
       }
       Document *doc = document_new(current->d_name);
