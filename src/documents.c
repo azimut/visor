@@ -1,6 +1,7 @@
 #include "documents.h"
 
 #include <libgen.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define INIT_CAPACITY 10
@@ -75,4 +76,22 @@ documents_free(Documents *docs)
   }
   free(docs->arr);
   docs = NULL;
+}
+
+static int
+document_compare(const void *rawa, const void *rawb)
+{
+  Document *a = (Document *)rawa;
+  Document *b = (Document *)rawb;
+  if (a->format != b->format) {
+    return a->format - b->format;
+  } else {
+    return strcmp(a->filename, b->filename);
+  }
+}
+
+void
+documents_sort(Documents *documents)
+{
+  qsort(documents->arr, documents->count, sizeof(Document), document_compare);
 }

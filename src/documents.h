@@ -28,5 +28,6 @@ void document_free(Document *);
 Documents documents_new(void);
 void documents_add(Documents *, const Document);
 void documents_free(Documents *);
+void documents_sort(Documents *);
 
 #endif /* DOCUMENTS_H */

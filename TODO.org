@@ -8,13 +8,11 @@
 - filter by
   - filename
   - pdftitle
-- sort by
-  - filename & depth
-  - visual similarity
-    - block/perceptual hashing https://www.youtube.com/watch?v=IJ-QjDCaz-o
-      - use hamming distance
-      - using the features extracted from a RNN with Annoy https://www.youtube.com/watch?v=wDnXFXbytVk
-      - " with a vector DB https://www.youtube.com/watch?v=mBcBoGhFndY
+- sort by visual similarity
+  - block/perceptual hashing https://www.youtube.com/watch?v=IJ-QjDCaz-o
+    - use hamming distance
+    - using the features extracted from a RNN with Annoy https://www.youtube.com/watch?v=wDnXFXbytVk
+    - " with a vector DB https://www.youtube.com/watch?v=mBcBoGhFndY
 - ui
   - different border control colors for different document type
   - lazy image rendering (no render offscreen)

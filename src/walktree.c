@@ -5,11 +5,7 @@
 
 #include <dirent.h>
 #include <ftw.h>
-#include <libgen.h>
-#include <limits.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 Documents pdfs = {0};
@@ -65,5 +61,6 @@ find_documents(const unsigned int depth)
   } else {
     nftw(".", callback, 10, FTW_DEPTH);
   }
+  documents_sort(&pdfs);
   return pdfs;
 }
