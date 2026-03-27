@@ -1,24 +1,22 @@
-- args
+- downscale EPUB thumbnails
+- parse/show pdf metadata
+- new modes on arg
   - clean up
   - depth
     - show subdirs with pdfs inside
       - skip empty (with no pdfs) subdirs
-- improve EPUB support
-  - [ ] downscale cover
-- overlays
-  - [ ] pdf/file metadata
-  - [ ] thumbnail zoom
+- filter by
+  - filename
+  - pdftitle
 - sort by
-  - [ ] filename & depth
-  - [ ] visual similarity
+  - filename & depth
+  - visual similarity
     - block/perceptual hashing https://www.youtube.com/watch?v=IJ-QjDCaz-o
       - use hamming distance
       - using the features extracted from a RNN with Annoy https://www.youtube.com/watch?v=wDnXFXbytVk
       - " with a vector DB https://www.youtube.com/watch?v=mBcBoGhFndY
-- [ ] different border control colors for different document type
-- [ ] lazy image rendering (no render offscreen)
-- [ ] dynamic resize of thumbnails (fake zoom)
-- [ ] dynamic resize grid based on window size
-- [ ] FILTER by
-  - filename
-  - pdftitle
+- ui
+  - different border control colors for different document type
+  - lazy image rendering (no render offscreen)
+  - dynamic resize of thumbnails (fake zoom)
+  - dynamic resize grid based on window size

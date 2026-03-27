@@ -15,6 +15,7 @@ A poor's man file explorer. But only for pdf (and similar) documents. Keyboard c
 - shows thumbnails of pdfs on current dir in a grid
 - thumbnails cached in `~/.cache/visor/`
 - files opened with `xdg-open`
+- zoomed preview of thumbnail of current selection
 
 ## Depends on
 
