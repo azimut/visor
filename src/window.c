@@ -69,6 +69,10 @@ model_new(const Documents documents)
 static void
 model_free(Model *model)
 {
+  SDL_FreeSurface(model->font.surface);
+  SDL_DestroyTexture(model->font.texture);
+  model->font.surface = NULL;
+  model->font.texture = NULL;
   TTF_CloseFont(model->font.ttf);
   TTF_Quit();
 }
@@ -239,10 +243,6 @@ update(Model *model, Control *control, const size_t total_size, const SDL_Event 
     switch (event.key.keysym.sym) {
     case SDLK_i: {
       model->preview = false;
-      SDL_FreeSurface(model->font.surface);
-      SDL_DestroyTexture(model->font.texture);
-      model->font.surface = NULL;
-      model->font.texture = NULL;
       break;
     }
     }
