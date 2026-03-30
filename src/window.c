@@ -189,7 +189,7 @@ view_preview(const Textures textures, const Screen screen, const Control control
       .w = model.font.width,
       .h = model.font.height,
       .x = (screen.width / 2.0) - (model.font.width / 2.0),
-      .y = screen.height - model.font.height * 4};
+      .y = screen.height / 2 + theight / 2 + model.font.height};
   SDL_RenderCopy(renderer, model.font.texture, NULL, &trect);
 }
 
