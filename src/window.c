@@ -185,11 +185,12 @@ view_preview(const Textures textures, const Screen screen, const Control control
   SDL_RenderCopy(renderer, tex, NULL, &rect);
 
   // Text
+  const int gapheight = (screen.height - theight) / 2;
   const SDL_Rect trect = {
       .w = model.font.width,
       .h = model.font.height,
       .x = (screen.width / 2.0) - (model.font.width / 2.0),
-      .y = screen.height / 2 + theight / 2 + model.font.height};
+      .y = screen.height - gapheight / 2 - model.font.height / 2};
   SDL_RenderCopy(renderer, model.font.texture, NULL, &trect);
 }
 
